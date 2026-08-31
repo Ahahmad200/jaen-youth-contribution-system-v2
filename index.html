@@ -1,19 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Jaen Youth Brothers Association Hub</title>
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-    <h1>Jaen Youth Brothers Association Hub</h1>
+    <div class="container">
 
-    <p>Monthly Contribution Management System</p>
+        <div class="card">
 
-    <h2>Website is working!</h2>
+            <h1>Jaen Youth Brothers Association Hub</h1>
+
+            <p>Monthly Contribution Management System</p>
+
+            <h2>Website is working!</h2>
+
+            <p id="supabaseStatus">
+                Connecting to Supabase...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Supabase library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Our Supabase configuration -->
+    <script src="js/supabase.js"></script>
+
+    <!-- Test -->
+    <script>
+
+        async function testSupabase() {
+
+            const { data, error } =
+                await supabaseClient
+                    .from("members")
+                    .select("id")
+                    .limit(1);
+
+            const status =
+                document.getElementById("supabaseStatus");
+
+            if (error) {
+
+                console.error("Supabase error:", error);
+
+                status.textContent =
+                    "Supabase connected, but database access returned an error.";
+
+            } else {
+
+                status.textContent =
+                    "Supabase connected successfully!";
+
+            }
+        }
+
+        testSupabase();
+
+    </script>
 
 </body>
+
 </html>
