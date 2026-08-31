@@ -12,63 +12,80 @@
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <div class="card">
+    <div class="card">
 
-            <h1>Jaen Youth Brothers Association Hub</h1>
+        <h1>Jaen Youth Brothers Association Hub</h1>
 
-            <p>Monthly Contribution Management System</p>
+        <p>Monthly Contribution Management System</p>
 
-            <h2>Website is working!</h2>
+        <hr>
 
-            <p id="supabaseStatus">
-                Connecting to Supabase...
-            </p>
+        <h2>Login</h2>
 
-        </div>
+        <p>Please select your account type.</p>
+
+        <button id="memberLoginBtn">
+            Member Login
+        </button>
+
+        <button id="adminLoginBtn">
+            Administrator Login
+        </button>
 
     </div>
 
 
-    <!-- Supabase library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <div class="card" id="loginSection" style="display:none;">
 
-    <!-- Our Supabase configuration -->
-    <script src="js/supabase.js"></script>
+        <h2 id="loginTitle">Member Login</h2>
 
-    <!-- Test -->
-    <script>
+        <form id="loginForm">
 
-        async function testSupabase() {
+            <label for="email">
+                Email
+            </label>
 
-            const { data, error } =
-                await supabaseClient
-                    .from("members")
-                    .select("id")
-                    .limit(1);
+            <input
+                type="email"
+                id="email"
+                required
+                autocomplete="email"
+            >
 
-            const status =
-                document.getElementById("supabaseStatus");
+            <label for="password">
+                Password
+            </label>
 
-            if (error) {
+            <input
+                type="password"
+                id="password"
+                required
+                autocomplete="current-password"
+            >
 
-                console.error("Supabase error:", error);
+            <button type="submit">
+                Login
+            </button>
 
-                status.textContent =
-                    "Supabase connected, but database access returned an error.";
+        </form>
 
-            } else {
+        <p id="loginMessage"></p>
 
-                status.textContent =
-                    "Supabase connected successfully!";
+    </div>
 
-            }
-        }
+</div>
 
-        testSupabase();
 
-    </script>
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Supabase configuration -->
+<script src="js/supabase.js"></script>
+
+<!-- Application -->
+<script src="js/app.js"></script>
 
 </body>
 
