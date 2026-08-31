@@ -18,17 +18,36 @@
 
         <h1>Administrator Dashboard</h1>
 
-        <p id="adminName">Loading administrator...</p>
+        <p>
+            Welcome,
+            <strong id="adminName">Loading...</strong>
+        </p>
+
+        <p>
+            Member ID:
+            <strong id="adminMemberId">Loading...</strong>
+        </p>
 
         <hr>
 
-        <h2>Jaen Youth Brothers Association Hub</h2>
+        <h2>Dashboard Overview</h2>
 
-        <p>Administrator access confirmed.</p>
-
-        <p id="adminStatus">
-            Checking account...
+        <p>
+            Total Members:
+            <strong id="totalMembers">0</strong>
         </p>
+
+        <p>
+            Contribution Records:
+            <strong id="totalRecords">0</strong>
+        </p>
+
+        <p>
+            Total Contributions:
+            <strong id="totalContributions">0</strong>
+        </p>
+
+        <hr>
 
         <button id="logoutBtn">
             Logout
@@ -38,68 +57,15 @@
 
 </div>
 
+
+<!-- Supabase library -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<!-- Supabase configuration -->
 <script src="js/supabase.js"></script>
 
-<script>
-
-async function loadAdmin() {
-
-    const {
-        data: { user },
-        error
-    } = await supabaseClient.auth.getUser();
-
-    if (error || !user) {
-
-        window.location.href = "index.html";
-
-        return;
-    }
-
-    const {
-        data: member,
-        error: memberError
-    } = await supabaseClient
-        .from("members")
-        .select("full_name, member_id, role")
-        .eq("auth_user_id", user.id)
-        .single();
-
-    if (
-        memberError ||
-        !member ||
-        member.role !== "admin"
-    ) {
-
-        await supabaseClient.auth.signOut();
-
-        window.location.href = "index.html";
-
-        return;
-    }
-
-    document.getElementById("adminName").textContent =
-        "Welcome, " + member.full_name;
-
-    document.getElementById("adminStatus").textContent =
-        "Administrator account verified successfully.";
-}
-
-
-document.getElementById("logoutBtn")
-    .addEventListener("click", async () => {
-
-        await supabaseClient.auth.signOut();
-
-        window.location.href = "index.html";
-    });
-
-
-loadAdmin();
-
-</script>
+<!-- Admin dashboard -->
+<script src="js/admin.js"></script>
 
 </body>
 
