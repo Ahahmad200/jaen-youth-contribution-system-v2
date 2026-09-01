@@ -2,23 +2,12 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <title>Member Dashboard | Jaen Youth Brothers Association Hub</title>
 
-    <title>
-        Member Dashboard | Jaen Youth Brothers Association Hub
-    </title>
-
-    <link
-        rel="stylesheet"
-        href="css/style.css"
-    >
-
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -27,32 +16,33 @@
 
     <div class="card">
 
-        <h1>Member Dashboard</h1>
+        <h1>Jaen Youth Brothers Association Hub</h1>
+
+        <h2>Member Dashboard</h2>
 
         <p>
             Welcome,
-            <strong id="memberName">
-                Loading...
-            </strong>
+            <strong id="memberName">Loading...</strong>
         </p>
 
         <p>
             Member ID:
-            <strong id="memberId">
-                Loading...
-            </strong>
+            <strong id="memberId">Loading...</strong>
         </p>
 
         <hr>
 
-        <h2>My Contributions</h2>
+        <div class="card">
+            <h2>Total Contribution</h2>
 
-        <p>
-            Total Contributed:
-            ₦<strong id="memberTotal">
-                0
-            </strong>
-        </p>
+            <h1>
+                ₦<span id="memberTotal">0</span>
+            </h1>
+        </div>
+
+        <hr>
+
+        <h2>My Contribution History</h2>
 
         <div id="contributionList">
             Loading contributions...
@@ -68,16 +58,11 @@
 
 </div>
 
-
-<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- Supabase configuration -->
 <script src="js/supabase.js"></script>
 
-<!-- Member dashboard -->
-<script src="js/member.js?v=1"></script>
+<script src="js/member.js?v=2"></script>
 
 </body>
-
 </html>
