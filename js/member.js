@@ -1,0 +1,143 @@
+async function loadMemberDashboard() {
+
+    const {
+        data: { user },
+        error: authError
+    } = await supabaseClient.auth.getUser();
+
+    if (authError || !user) {
+        window.location.href = "index.html";
+        return;
+    }
+
+
+    // Find the logged-in member
+    const {
+        data: member,
+        error: memberError
+    } = await supabaseClient
+        .from("members")
+        .select("id, member_id, full_name, role")
+        .eq("auth_user_id", user.id)
+        .single();
+
+
+    if (
+        memberError ||
+        !member ||
+        member.role !== "member"
+    ) {
+        await supabaseClient.auth.signOut();
+        window.location.href = "index.html";
+        return;
+    }
+
+
+    // Display member information
+    document.getElementById("memberName").textContent =
+        member.full_name;
+
+    document.getElementById("memberId").textContent =
+        member.member_id;
+
+
+    // Get this member's contributions
+    const {
+        data: contributions,
+        error: contributionError
+    } = await supabaseClient
+        .from("contributions")
+        .select(
+            "contribution_month, amount, payment_date, notes"
+        )
+        .eq("member_id", member.id)
+        .order("contribution_month", {
+            ascending: false
+        });
+
+
+    if (contributionError) {
+
+        console.error(
+            "Contribution error:",
+            contributionError
+        );
+
+        document.getElementById("contributionList").textContent =
+            "Unable to load contributions.";
+
+        return;
+    }
+
+
+    // Calculate total
+    const total = contributions.reduce(
+        (sum, contribution) =>
+            sum + Number(contribution.amount || 0),
+        0
+    );
+
+
+    document.getElementById("memberTotal").textContent =
+        total.toLocaleString();
+
+
+    // Display contribution history
+    const list =
+        document.getElementById("contributionList");
+
+    list.innerHTML = "";
+
+
+    if (contributions.length === 0) {
+
+        list.textContent =
+            "No contribution records found.";
+
+        return;
+    }
+
+
+    contributions.forEach(contribution => {
+
+        const item =
+            document.createElement("div");
+
+        item.className = "contribution-item";
+
+        item.innerHTML = `
+            <strong>
+                ${contribution.contribution_month}
+            </strong>
+            <br>
+            Amount: ₦${Number(
+                contribution.amount
+            ).toLocaleString()}
+            <br>
+            Payment Date:
+            ${contribution.payment_date || "N/A"}
+            ${
+                contribution.notes
+                    ? `<br>Notes: ${contribution.notes}`
+                    : ""
+            }
+            <hr>
+        `;
+
+        list.appendChild(item);
+    });
+}
+
+
+// Logout
+document
+    .getElementById("logoutBtn")
+    .addEventListener("click", async () => {
+
+        await supabaseClient.auth.signOut();
+
+        window.location.href = "index.html";
+    });
+
+
+loadMemberDashboard();
