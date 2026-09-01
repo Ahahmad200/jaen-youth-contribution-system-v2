@@ -100,32 +100,30 @@ async function loadMemberDashboard() {
 
     contributions.forEach(contribution => {
 
-        const item =
-            document.createElement("div");
+    const row = document.createElement("tr");
 
-        item.className = "contribution-item";
+    row.innerHTML = `
+        <td>
+            ${contribution.contribution_month}
+        </td>
 
-        item.innerHTML = `
-            <strong>
-                ${contribution.contribution_month}
-            </strong>
-            <br>
-            Amount: ₦${Number(
-                contribution.amount
+        <td>
+            ₦${Number(
+                contribution.amount || 0
             ).toLocaleString()}
-            <br>
-            Payment Date:
-            ${contribution.payment_date || "N/A"}
-            ${
-                contribution.notes
-                    ? `<br>Notes: ${contribution.notes}`
-                    : ""
-            }
-            <hr>
-        `;
+        </td>
 
-        list.appendChild(item);
-    });
+        <td>
+            ${contribution.payment_date || "N/A"}
+        </td>
+
+        <td>
+            ${contribution.notes || "—"}
+        </td>
+    `;
+
+    list.appendChild(row);
+});
 }
 
 
