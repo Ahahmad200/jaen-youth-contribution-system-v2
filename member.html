@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Member Dashboard | Jaen Youth Brothers Association Hub
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>Member Dashboard</h1>
+
+        <p>
+            Welcome,
+            <strong id="memberName">
+                Loading...
+            </strong>
+        </p>
+
+        <p>
+            Member ID:
+            <strong id="memberId">
+                Loading...
+            </strong>
+        </p>
+
+        <hr>
+
+        <h2>My Contributions</h2>
+
+        <p>
+            Total Contributed:
+            ₦<strong id="memberTotal">
+                0
+            </strong>
+        </p>
+
+        <div id="contributionList">
+            Loading contributions...
+        </div>
+
+        <hr>
+
+        <button id="logoutBtn">
+            Logout
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Supabase configuration -->
+<script src="js/supabase.js"></script>
+
+<!-- Member dashboard -->
+<script src="js/member.js?v=1"></script>
+
+</body>
+
+</html>
