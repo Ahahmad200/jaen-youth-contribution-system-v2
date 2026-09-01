@@ -346,7 +346,11 @@ document
 
 
         // Refresh dashboard
-        loadAdminDashboard();
+            });
+
+loadMembers();
+
+loadAdminDashboard();
 
     });
 loadAdminDashboard();
