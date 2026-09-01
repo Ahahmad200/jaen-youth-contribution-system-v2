@@ -313,7 +313,7 @@ document
             .from("contributions")
             .insert({
                 member_id: memberId,
-                contribution_date: contributionDate,
+                contribution_month: contributionDate,
                 amount: amount,
                 payment_date: paymentDate,
                 recorded_by: admin.id,
