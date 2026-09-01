@@ -1,3 +1,36 @@
+async function loadMembers() {
+
+    const { data: members, error } =
+        await supabaseClient
+            .from("members")
+            .select("id, member_id, full_name")
+            .eq("role", "member")
+            .order("full_name");
+
+    if (error) {
+        console.error("Error loading members:", error);
+        return;
+    }
+
+    const select =
+        document.getElementById("memberSelect");
+
+    select.innerHTML =
+        '<option value="">Select a member</option>';
+
+    members.forEach(member => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = member.id;
+
+        option.textContent =
+            `${member.full_name} (${member.member_id})`;
+
+        select.appendChild(option);
+    });
+}
 async function loadAdminDashboard() {
 
     const {
