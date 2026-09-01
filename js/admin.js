@@ -352,5 +352,3 @@ loadMembers();
 
 loadAdminDashboard();
 
-    });
-loadAdminDashboard();
