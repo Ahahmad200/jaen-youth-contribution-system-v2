@@ -191,5 +191,129 @@ document
         loadAdminDashboard();
 
     });
+// ==========================================
+// RECORD CONTRIBUTION
+// ==========================================
 
+document
+    .getElementById("contributionForm")
+    .addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        const memberId =
+            document.getElementById("memberSelect").value;
+
+        const contributionDate =
+            document.getElementById("contributionDate").value;
+
+        const amount =
+            Number(document.getElementById("amount").value);
+
+        const paymentDate =
+            document.getElementById("paymentDate").value;
+
+        const notes =
+            document.getElementById("notes").value.trim();
+
+        const message =
+            document.getElementById("contributionMessage");
+
+        message.textContent =
+            "Recording contribution...";
+
+
+        // Check login
+        const {
+            data: { user },
+            error: authError
+        } = await supabaseClient.auth.getUser();
+
+
+        if (authError || !user) {
+
+            message.textContent =
+                "Your session has expired. Please log in again.";
+
+            return;
+        }
+
+
+        // Verify administrator
+        const {
+            data: admin,
+            error: adminError
+        } = await supabaseClient
+            .from("members")
+            .select("id, role")
+            .eq("auth_user_id", user.id)
+            .single();
+
+
+        if (
+            adminError ||
+            !admin ||
+            admin.role !== "admin"
+        ) {
+
+            message.textContent =
+                "Administrator permission required.";
+
+            return;
+        }
+
+
+        // Validate amount
+        if (!amount || amount <= 0) {
+
+            message.textContent =
+                "Please enter a valid contribution amount.";
+
+            return;
+        }
+
+
+        // Save contribution
+        const {
+            error
+        } = await supabaseClient
+            .from("contributions")
+            .insert({
+                member_id: memberId,
+                contribution_date: contributionDate,
+                amount: amount,
+                payment_date: paymentDate,
+                recorded_by: admin.id,
+                notes: notes || null
+            });
+
+
+        if (error) {
+
+            console.error(
+                "Contribution error:",
+                error
+            );
+
+            message.textContent =
+                "Error: " + error.message;
+
+            return;
+        }
+
+
+        message.textContent =
+            "Contribution recorded successfully!";
+
+
+        // Clear form
+        document
+            .getElementById("contributionForm")
+            .reset();
+
+
+        // Refresh dashboard
+        loadAdminDashboard();
+
+    });
 loadAdminDashboard();
