@@ -359,7 +359,7 @@ async function loadContributionRecords() {
     } = await supabaseClient
         .from("contributions")
         .select(
-            "member_id, contribution_month, amount, payment_date, notes"
+            "id, member_id, contribution_month, amount, payment_date, notes"
         )
         .order("contribution_month", {
             ascending: false
@@ -466,6 +466,14 @@ async function loadContributionRecords() {
             <td>
                 ${contribution.notes || "—"}
             </td>
+            <td>
+    <button
+        class="editContributionBtn"
+        data-id="${contribution.id}"
+    >
+        Edit
+    </button>
+</td>
         `;
 
         list.appendChild(row);
