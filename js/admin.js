@@ -481,7 +481,54 @@ async function loadContributionRecords() {
         Delete
     </button>
 </td>
-        `;
+
+   // ==========================================
+// DELETE CONTRIBUTION
+// ==========================================
+
+document.addEventListener("click", async (event) => {
+
+    if (!event.target.classList.contains("deleteContributionBtn")) {
+        return;
+    }
+
+    const contributionId =
+        event.target.dataset.id;
+
+    const confirmed = confirm(
+        "Are you sure you want to delete this contribution record?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const { error } =
+        await supabaseClient
+            .from("contributions")
+            .delete()
+            .eq("id", contributionId);
+
+    if (error) {
+
+        console.error(
+            "Delete contribution error:",
+            error
+        );
+
+        alert(
+            "Unable to delete contribution: " +
+            error.message
+        );
+
+        return;
+    }
+
+    alert("Contribution deleted successfully!");
+
+    loadContributionRecords();
+    loadAdminDashboard();
+});     `;
 
         list.appendChild(row);
     });
