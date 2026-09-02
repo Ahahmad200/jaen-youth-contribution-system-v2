@@ -349,32 +349,27 @@ document
             });
 async function loadContributionRecords() {
 
+    const list =
+        document.getElementById("adminContributionList");
+
+    // Get all contribution records
     const {
         data: contributions,
-        error
+        error: contributionError
     } = await supabaseClient
         .from("contributions")
-        .select(`
-            contribution_month,
-            amount,
-            payment_date,
-            notes,
-            members (
-                full_name,
-                member_id
-            )
-        `)
+        .select(
+            "member_id, contribution_month, amount, payment_date, notes"
+        )
         .order("contribution_month", {
             ascending: false
         });
 
-    const list =
-        document.getElementById("adminContributionList");
+    if (contributionError) {
 
-    if (error) {
         console.error(
-            "Error loading contribution records:",
-            error
+            "Error loading contributions:",
+            contributionError
         );
 
         list.innerHTML = `
@@ -387,6 +382,39 @@ async function loadContributionRecords() {
 
         return;
     }
+
+    // Get member information separately
+    const {
+        data: members,
+        error: memberError
+    } = await supabaseClient
+        .from("members")
+        .select("id, member_id, full_name");
+
+    if (memberError) {
+
+        console.error(
+            "Error loading members:",
+            memberError
+        );
+
+        list.innerHTML = `
+            <tr>
+                <td colspan="6">
+                    Unable to load member information.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    // Create a quick member lookup
+    const memberMap = {};
+
+    members.forEach(member => {
+        memberMap[member.id] = member;
+    });
 
     list.innerHTML = "";
 
@@ -403,18 +431,22 @@ async function loadContributionRecords() {
         return;
     }
 
+    // Display contribution records
     contributions.forEach(contribution => {
+
+        const member =
+            memberMap[contribution.member_id];
 
         const row =
             document.createElement("tr");
 
         row.innerHTML = `
             <td>
-                ${contribution.members?.full_name || "Unknown"}
+                ${member?.full_name || "Unknown"}
             </td>
 
             <td>
-                ${contribution.members?.member_id || "N/A"}
+                ${member?.member_id || "N/A"}
             </td>
 
             <td>
