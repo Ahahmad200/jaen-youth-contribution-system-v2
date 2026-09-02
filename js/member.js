@@ -168,4 +168,9 @@ document
             }
         });
     });
+document
+    .getElementById("printStatementBtn")
+    .addEventListener("click", function () {
+        window.print();
+    });
 loadMemberDashboard();
