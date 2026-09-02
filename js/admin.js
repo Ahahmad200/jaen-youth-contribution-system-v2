@@ -473,6 +473,13 @@ async function loadContributionRecords() {
     >
         Edit
     </button>
+
+    <button
+        class="deleteContributionBtn"
+        data-id="${contribution.id}"
+    >
+        Delete
+    </button>
 </td>
         `;
 
