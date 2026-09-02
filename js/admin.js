@@ -482,3 +482,59 @@ async function loadContributionRecords() {
 loadMembers();
 loadAdminDashboard();
 loadContributionRecords();
+// ==========================================
+// EDIT CONTRIBUTION
+// ==========================================
+
+document.addEventListener("click", async (event) => {
+
+    if (!event.target.classList.contains("editContributionBtn")) {
+        return;
+    }
+
+    const contributionId =
+        event.target.dataset.id;
+
+    const newAmount = prompt(
+        "Enter the new contribution amount:"
+    );
+
+    if (newAmount === null) {
+        return;
+    }
+
+    const amount = Number(newAmount);
+
+    if (!amount || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+    }
+
+    const { error } =
+        await supabaseClient
+            .from("contributions")
+            .update({
+                amount: amount
+            })
+            .eq("id", contributionId);
+
+    if (error) {
+
+        console.error(
+            "Edit contribution error:",
+            error
+        );
+
+        alert(
+            "Unable to update contribution: " +
+            error.message
+        );
+
+        return;
+    }
+
+    alert("Contribution updated successfully!");
+
+    loadContributionRecords();
+    loadAdminDashboard();
+});
