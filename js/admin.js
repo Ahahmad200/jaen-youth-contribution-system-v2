@@ -347,8 +347,98 @@ document
 
         // Refresh dashboard
             });
+async function loadContributionRecords() {
 
+    const {
+        data: contributions,
+        error
+    } = await supabaseClient
+        .from("contributions")
+        .select(`
+            contribution_month,
+            amount,
+            payment_date,
+            notes,
+            members (
+                full_name,
+                member_id
+            )
+        `)
+        .order("contribution_month", {
+            ascending: false
+        });
+
+    const list =
+        document.getElementById("adminContributionList");
+
+    if (error) {
+        console.error(
+            "Error loading contribution records:",
+            error
+        );
+
+        list.innerHTML = `
+            <tr>
+                <td colspan="6">
+                    Unable to load contribution records.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    list.innerHTML = "";
+
+    if (!contributions || contributions.length === 0) {
+
+        list.innerHTML = `
+            <tr>
+                <td colspan="6">
+                    No contribution records found.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    contributions.forEach(contribution => {
+
+        const row =
+            document.createElement("tr");
+
+        row.innerHTML = `
+            <td>
+                ${contribution.members?.full_name || "Unknown"}
+            </td>
+
+            <td>
+                ${contribution.members?.member_id || "N/A"}
+            </td>
+
+            <td>
+                ${contribution.contribution_month}
+            </td>
+
+            <td>
+                ₦${Number(
+                    contribution.amount || 0
+                ).toLocaleString()}
+            </td>
+
+            <td>
+                ${contribution.payment_date || "N/A"}
+            </td>
+
+            <td>
+                ${contribution.notes || "—"}
+            </td>
+        `;
+
+        list.appendChild(row);
+    });
+}
 loadMembers();
-
 loadAdminDashboard();
-
+loadContributionRecords();
