@@ -532,7 +532,7 @@ document.addEventListener("click", async (event) => {
 
         list.appendChild(row);
     });
-
+) 
 loadMembers();
 loadAdminDashboard();
 loadContributionRecords();
