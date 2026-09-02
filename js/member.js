@@ -137,5 +137,35 @@ document
         window.location.href = "index.html";
     });
 
+document
+    .getElementById("monthFilter")
+    .addEventListener("change", function () {
 
+        const selectedMonth = this.value;
+
+        const rows =
+            document.querySelectorAll(
+                "#contributionList tr"
+            );
+
+        rows.forEach(row => {
+
+            const monthCell = row
+                .querySelector("td");
+
+            if (!monthCell) return;
+
+            const contributionMonth =
+                monthCell.textContent.trim();
+
+            if (
+                !selectedMonth ||
+                contributionMonth.startsWith(selectedMonth)
+            ) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
 loadMemberDashboard();
