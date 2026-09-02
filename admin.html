@@ -213,7 +213,89 @@
 
 </div>
 
+<!-- ==========================================
+     EDIT CONTRIBUTION WINDOW
+========================================== -->
 
+<div id="editContributionModal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>Edit Contribution</h2>
+
+        <form id="editContributionForm">
+
+            <input
+                type="hidden"
+                id="editContributionId"
+            >
+
+            <label for="editContributionMonth">
+                Contribution Month
+            </label>
+
+            <input
+                type="date"
+                id="editContributionMonth"
+                required
+            >
+
+            <br><br>
+
+            <label for="editAmount">
+                Amount
+            </label>
+
+            <input
+                type="number"
+                id="editAmount"
+                min="1"
+                required
+            >
+
+            <br><br>
+
+            <label for="editPaymentDate">
+                Payment Date
+            </label>
+
+            <input
+                type="date"
+                id="editPaymentDate"
+                required
+            >
+
+            <br><br>
+
+            <label for="editNotes">
+                Notes
+            </label>
+
+            <textarea
+                id="editNotes"
+                rows="3"
+            ></textarea>
+
+            <br><br>
+
+            <button type="submit">
+                Save Changes
+            </button>
+
+            <button
+                type="button"
+                id="cancelEditBtn"
+            >
+                Cancel
+            </button>
+
+            <p id="editMessage"></p>
+
+        </form>
+
+    </div>
+
+</div>
 <!-- Supabase library -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
