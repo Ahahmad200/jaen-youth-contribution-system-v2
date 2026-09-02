@@ -816,7 +816,92 @@ document.addEventListener(
 // ==========================================
 // START ADMIN DASHBOARD
 // ==========================================
+// ==========================================
+// LOAD MEMBER MANAGEMENT TABLE
+// ==========================================
 
+async function loadMemberManagement() {
+
+    const list =
+        document.getElementById("adminMemberList");
+
+    const {
+        data: members,
+        error
+    } = await supabaseClient
+        .from("members")
+        .select(
+            "id, member_id, full_name, email, phone"
+        )
+        .eq("role", "member")
+        .order("full_name");
+
+    if (error) {
+
+        console.error(
+            "Error loading member management:",
+            error
+        );
+
+        list.innerHTML = `
+            <tr>
+                <td colspan="5">
+                    Unable to load members.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    list.innerHTML = "";
+
+    if (!members || members.length === 0) {
+
+        list.innerHTML = `
+            <tr>
+                <td colspan="5">
+                    No members found.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    members.forEach(member => {
+
+        const row =
+            document.createElement("tr");
+
+        row.innerHTML = `
+            <td>
+                ${member.full_name || "N/A"}
+            </td>
+
+            <td>
+                ${member.member_id || "N/A"}
+            </td>
+
+            <td>
+                ${member.email || "N/A"}
+            </td>
+
+            <td>
+                ${member.phone || "N/A"}
+            </td>
+
+            <td>
+                <button>
+                    Edit
+                </button>
+            </td>
+        `;
+
+        list.appendChild(row);
+    });
+}
 loadMembers();
 loadAdminDashboard();
 loadContributionRecords();
+loadMemberManagement();
