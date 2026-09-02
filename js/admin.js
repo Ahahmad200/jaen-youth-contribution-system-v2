@@ -1,3 +1,7 @@
+// ==========================================
+// LOAD MEMBERS
+// ==========================================
+
 async function loadMembers() {
 
     const { data: members, error } =
@@ -31,6 +35,12 @@ async function loadMembers() {
         select.appendChild(option);
     });
 }
+
+
+// ==========================================
+// LOAD ADMIN DASHBOARD
+// ==========================================
+
 async function loadAdminDashboard() {
 
     const {
@@ -43,11 +53,11 @@ async function loadAdminDashboard() {
         return;
     }
 
-    // Get administrator's profile
+    // Get administrator profile
     const { data: admin, error: adminError } =
         await supabaseClient
             .from("members")
-            .select("full_name, member_id, role")
+            .select("id, full_name, member_id, role")
             .eq("auth_user_id", user.id)
             .single();
 
@@ -69,15 +79,18 @@ async function loadAdminDashboard() {
 
 
     // Count members
-    const { count: memberCount, error: memberError } =
-        await supabaseClient
-            .from("members")
-            .select("id", {
-                count: "exact",
-                head: true
-            });
+    const {
+        count: memberCount,
+        error: memberError
+    } = await supabaseClient
+        .from("members")
+        .select("id", {
+            count: "exact",
+            head: true
+        });
 
     if (!memberError) {
+
         document.getElementById("totalMembers").textContent =
             memberCount ?? 0;
     }
@@ -108,7 +121,10 @@ async function loadAdminDashboard() {
 }
 
 
-// Logout
+// ==========================================
+// LOGOUT
+// ==========================================
+
 document
     .getElementById("logoutBtn")
     .addEventListener("click", async () => {
@@ -117,6 +133,8 @@ document
 
         window.location.href = "index.html";
     });
+
+
 // ==========================================
 // ADD NEW MEMBER
 // ==========================================
@@ -142,118 +160,8 @@ document
         const message =
             document.getElementById("memberMessage");
 
-        message.textContent = "Adding member...";
-
-
-        // Make sure the current user is authenticated
-        const {
-            data: { user },
-            error: authError
-        } = await supabaseClient.auth.getUser();
-
-
-        if (authError || !user) {
-
-            message.textContent =
-                "Your session has expired. Please log in again.";
-
-            return;
-        }
-
-
-        // Verify that the current user is an administrator
-        const {
-            data: admin,
-            error: adminError
-        } = await supabaseClient
-            .from("members")
-            .select("id, role")
-            .eq("auth_user_id", user.id)
-            .single();
-
-
-        if (
-            adminError ||
-            !admin ||
-            admin.role !== "admin"
-        ) {
-
-            message.textContent =
-                "Administrator permission required.";
-
-            return;
-        }
-
-
-        // Add the new member
-        const {
-            error
-        } = await supabaseClient
-            .from("members")
-            .insert({
-                member_id: memberId,
-                full_name: fullName,
-                email: email || null,
-                phone: phone || null,
-                role: "member"
-            });
-
-
-        if (error) {
-
-            console.error("Add member error:", error);
-
-            message.textContent =
-                "Error: " + error.message;
-
-            return;
-        }
-
-
         message.textContent =
-            "Member added successfully!";
-
-
-        // Clear the form
-        document
-            .getElementById("addMemberForm")
-            .reset();
-
-
-        // Refresh dashboard member count
-        loadAdminDashboard();
-
-    });
-// ==========================================
-// RECORD CONTRIBUTION
-// ==========================================
-
-document
-    .getElementById("contributionForm")
-    .addEventListener("submit", async (event) => {
-
-        event.preventDefault();
-
-        const memberId =
-            document.getElementById("memberSelect").value;
-
-        const contributionDate =
-            document.getElementById("contributionDate").value;
-
-        const amount =
-            Number(document.getElementById("amount").value);
-
-        const paymentDate =
-            document.getElementById("paymentDate").value;
-
-        const notes =
-            document.getElementById("notes").value.trim();
-
-        const message =
-            document.getElementById("contributionMessage");
-
-        message.textContent =
-            "Recording contribution...";
+            "Adding member...";
 
 
         // Check login
@@ -261,7 +169,6 @@ document
             data: { user },
             error: authError
         } = await supabaseClient.auth.getUser();
-
 
         if (authError || !user) {
 
@@ -282,6 +189,120 @@ document
             .eq("auth_user_id", user.id)
             .single();
 
+        if (
+            adminError ||
+            !admin ||
+            admin.role !== "admin"
+        ) {
+
+            message.textContent =
+                "Administrator permission required.";
+
+            return;
+        }
+
+
+        // Add member
+        const {
+            error
+        } = await supabaseClient
+            .from("members")
+            .insert({
+                member_id: memberId,
+                full_name: fullName,
+                email: email || null,
+                phone: phone || null,
+                role: "member"
+            });
+
+        if (error) {
+
+            console.error(
+                "Add member error:",
+                error
+            );
+
+            message.textContent =
+                "Error: " + error.message;
+
+            return;
+        }
+
+
+        message.textContent =
+            "Member added successfully!";
+
+
+        // Clear form
+        document
+            .getElementById("addMemberForm")
+            .reset();
+
+
+        // Refresh dashboard
+        loadMembers();
+        loadAdminDashboard();
+    });
+
+
+// ==========================================
+// RECORD CONTRIBUTION
+// ==========================================
+
+document
+    .getElementById("contributionForm")
+    .addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        const memberId =
+            document.getElementById("memberSelect").value;
+
+        const contributionDate =
+            document.getElementById("contributionDate").value;
+
+        const amount =
+            Number(
+                document.getElementById("amount").value
+            );
+
+        const paymentDate =
+            document.getElementById("paymentDate").value;
+
+        const notes =
+            document.getElementById("notes").value.trim();
+
+        const message =
+            document.getElementById("contributionMessage");
+
+        message.textContent =
+            "Recording contribution...";
+
+
+        // Check login
+        const {
+            data: { user },
+            error: authError
+        } = await supabaseClient.auth.getUser();
+
+        if (authError || !user) {
+
+            message.textContent =
+                "Your session has expired. Please log in again.";
+
+            return;
+        }
+
+
+        // Verify administrator
+        const {
+            data: admin,
+            error: adminError
+        } = await supabaseClient
+            .from("members")
+            .select("id, role")
+            .eq("auth_user_id", user.id)
+            .single();
 
         if (
             adminError ||
@@ -291,6 +312,16 @@ document
 
             message.textContent =
                 "Administrator permission required.";
+
+            return;
+        }
+
+
+        // Validate member
+        if (!memberId) {
+
+            message.textContent =
+                "Please select a member.";
 
             return;
         }
@@ -320,7 +351,6 @@ document
                 notes: notes || null
             });
 
-
         if (error) {
 
             console.error(
@@ -345,14 +375,22 @@ document
             .reset();
 
 
-        // Refresh dashboard
-            });
+        // Refresh dashboard and records
+        loadAdminDashboard();
+        loadContributionRecords();
+    });
+
+
+// ==========================================
+// LOAD ALL CONTRIBUTION RECORDS
+// ==========================================
+
 async function loadContributionRecords() {
 
     const list =
         document.getElementById("adminContributionList");
 
-    // Get all contribution records
+    // Get contributions
     const {
         data: contributions,
         error: contributionError
@@ -374,7 +412,7 @@ async function loadContributionRecords() {
 
         list.innerHTML = `
             <tr>
-                <td colspan="6">
+                <td colspan="7">
                     Unable to load contribution records.
                 </td>
             </tr>
@@ -383,13 +421,15 @@ async function loadContributionRecords() {
         return;
     }
 
-    // Get member information separately
+
+    // Get members
     const {
         data: members,
         error: memberError
     } = await supabaseClient
         .from("members")
         .select("id, member_id, full_name");
+
 
     if (memberError) {
 
@@ -400,7 +440,7 @@ async function loadContributionRecords() {
 
         list.innerHTML = `
             <tr>
-                <td colspan="6">
+                <td colspan="7">
                     Unable to load member information.
                 </td>
             </tr>
@@ -409,20 +449,27 @@ async function loadContributionRecords() {
         return;
     }
 
-    // Create a quick member lookup
+
+    // Create member lookup
     const memberMap = {};
 
     members.forEach(member => {
+
         memberMap[member.id] = member;
     });
 
+
     list.innerHTML = "";
 
-    if (!contributions || contributions.length === 0) {
+
+    if (
+        !contributions ||
+        contributions.length === 0
+    ) {
 
         list.innerHTML = `
             <tr>
-                <td colspan="6">
+                <td colspan="7">
                     No contribution records found.
                 </td>
             </tr>
@@ -431,7 +478,8 @@ async function loadContributionRecords() {
         return;
     }
 
-    // Display contribution records
+
+    // Display records
     contributions.forEach(contribution => {
 
         const member =
@@ -466,129 +514,185 @@ async function loadContributionRecords() {
             <td>
                 ${contribution.notes || "—"}
             </td>
+
             <td>
-    <button
-        class="editContributionBtn"
-        data-id="${contribution.id}"
-    >
-        Edit
-    </button>
 
-    <button
-        class="deleteContributionBtn"
-        data-id="${contribution.id}"
-    >
-        Delete
-    </button>
-</td>
+                <button
+                    class="editContributionBtn"
+                    data-id="${contribution.id}"
+                >
+                    Edit
+                </button>
 
-   // ==========================================
-// DELETE CONTRIBUTION
-// ==========================================
+                <button
+                    class="deleteContributionBtn"
+                    data-id="${contribution.id}"
+                >
+                    Delete
+                </button>
 
-document.addEventListener("click", async (event) => {
-
-    if (!event.target.classList.contains("deleteContributionBtn")) {
-        return;
-    }
-
-    const contributionId =
-        event.target.dataset.id;
-
-    const confirmed = confirm(
-        "Are you sure you want to delete this contribution record?"
-    );
-
-    if (!confirmed) {
-        return;
-    }
-
-    const { error } =
-        await supabaseClient
-            .from("contributions")
-            .delete()
-            .eq("id", contributionId);
-
-    if (error) {
-
-        console.error(
-            "Delete contribution error:",
-            error
-        );
-
-        alert(
-            "Unable to delete contribution: " +
-            error.message
-        );
-
-        return;
-    }
-
-    alert("Contribution deleted successfully!");
-
-    loadContributionRecords();
-    loadAdminDashboard();
-});     `;
+            </td>
+        `;
 
         list.appendChild(row);
     });
-) 
-loadMembers();
-loadAdminDashboard();
-loadContributionRecords();
+}
+
+
 // ==========================================
 // EDIT CONTRIBUTION
 // ==========================================
 
-document.addEventListener("click", async (event) => {
+document.addEventListener(
+    "click",
+    async (event) => {
 
-    if (!event.target.classList.contains("editContributionBtn")) {
-        return;
-    }
+        if (
+            !event.target.classList.contains(
+                "editContributionBtn"
+            )
+        ) {
+            return;
+        }
 
-    const contributionId =
-        event.target.dataset.id;
 
-    const newAmount = prompt(
-        "Enter the new contribution amount:"
-    );
+        const contributionId =
+            event.target.dataset.id;
 
-    if (newAmount === null) {
-        return;
-    }
 
-    const amount = Number(newAmount);
+        const newAmount =
+            prompt(
+                "Enter the new contribution amount:"
+            );
 
-    if (!amount || amount <= 0) {
-        alert("Please enter a valid amount.");
-        return;
-    }
 
-    const { error } =
-        await supabaseClient
+        if (newAmount === null) {
+            return;
+        }
+
+
+        const amount =
+            Number(newAmount);
+
+
+        if (!amount || amount <= 0) {
+
+            alert(
+                "Please enter a valid amount."
+            );
+
+            return;
+        }
+
+
+        const {
+            error
+        } = await supabaseClient
             .from("contributions")
             .update({
                 amount: amount
             })
             .eq("id", contributionId);
 
-    if (error) {
 
-        console.error(
-            "Edit contribution error:",
-            error
-        );
+        if (error) {
+
+            console.error(
+                "Edit contribution error:",
+                error
+            );
+
+            alert(
+                "Unable to update contribution: " +
+                error.message
+            );
+
+            return;
+        }
+
 
         alert(
-            "Unable to update contribution: " +
-            error.message
+            "Contribution updated successfully!"
         );
 
-        return;
+
+        loadContributionRecords();
+        loadAdminDashboard();
     }
+);
 
-    alert("Contribution updated successfully!");
 
-    loadContributionRecords();
-    loadAdminDashboard();
-});
+// ==========================================
+// DELETE CONTRIBUTION
+// ==========================================
+
+document.addEventListener(
+    "click",
+    async (event) => {
+
+        if (
+            !event.target.classList.contains(
+                "deleteContributionBtn"
+            )
+        ) {
+            return;
+        }
+
+
+        const contributionId =
+            event.target.dataset.id;
+
+
+        const confirmed =
+            confirm(
+                "Are you sure you want to delete this contribution record?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        const {
+            error
+        } = await supabaseClient
+            .from("contributions")
+            .delete()
+            .eq("id", contributionId);
+
+
+        if (error) {
+
+            console.error(
+                "Delete contribution error:",
+                error
+            );
+
+            alert(
+                "Unable to delete contribution: " +
+                error.message
+            );
+
+            return;
+        }
+
+
+        alert(
+            "Contribution deleted successfully!"
+        );
+
+
+        loadContributionRecords();
+        loadAdminDashboard();
+    }
+);
+
+
+// ==========================================
+// START ADMIN DASHBOARD
+// ==========================================
+
+loadMembers();
+loadAdminDashboard();
+loadContributionRecords();
