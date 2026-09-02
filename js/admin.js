@@ -838,20 +838,20 @@ async function loadMemberManagement() {
 
     if (error) {
 
-        console.error(
-            "Error loading member management:",
-            error
-        );
+    console.error(
+        "Error loading member management:",
+        error
+    );
 
-        list.innerHTML = `
-            <tr>
-                <td colspan="5">
-                    Unable to load members.
-                </td>
-            </tr>
-        `;
+    list.innerHTML = `
+        <tr>
+            <td colspan="5">
+                Error: ${error.message}
+            </td>
+        </tr>
+    `;
 
-        return;
+    return;
     }
 
     list.innerHTML = "";
