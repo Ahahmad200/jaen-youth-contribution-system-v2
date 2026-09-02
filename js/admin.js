@@ -555,71 +555,195 @@ document.addEventListener(
             return;
         }
 
-
         const contributionId =
             event.target.dataset.id;
 
+        // Get the selected contribution
+        const {
+            data: contribution,
+            error
+        } = await supabaseClient
+            .from("contributions")
+            .select(
+                "id, contribution_month, amount, payment_date, notes"
+            )
+            .eq("id", contributionId)
+            .single();
 
-        const newAmount =
-            prompt(
-                "Enter the new contribution amount:"
+        if (error || !contribution) {
+
+            console.error(
+                "Error loading contribution:",
+                error
             );
 
+            alert(
+                "Unable to load contribution."
+            );
 
-        if (newAmount === null) {
             return;
         }
 
+        // Put the existing values into the form
+        document.getElementById(
+            "editContributionId"
+        ).value = contribution.id;
+
+        document.getElementById(
+            "editContributionMonth"
+        ).value = contribution.contribution_month;
+
+        document.getElementById(
+            "editAmount"
+        ).value = contribution.amount;
+
+        document.getElementById(
+            "editPaymentDate"
+        ).value = contribution.payment_date || "";
+
+        document.getElementById(
+            "editNotes"
+        ).value = contribution.notes || "";
+
+        // Show the edit window
+        document.getElementById(
+            "editContributionModal"
+        ).style.display = "block";
+    }
+);
+
+
+// ==========================================
+// CANCEL EDIT
+// ==========================================
+
+document
+    .getElementById("cancelEditBtn")
+    .addEventListener("click", () => {
+
+        document.getElementById(
+            "editContributionModal"
+        ).style.display = "none";
+    });
+
+
+// ==========================================
+// SAVE EDITED CONTRIBUTION
+// ==========================================
+
+document
+    .getElementById("editContributionForm")
+    .addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        const contributionId =
+            document.getElementById(
+                "editContributionId"
+            ).value;
+
+        const contributionMonth =
+            document.getElementById(
+                "editContributionMonth"
+            ).value;
 
         const amount =
-            Number(newAmount);
+            Number(
+                document.getElementById(
+                    "editAmount"
+                ).value
+            );
 
+        const paymentDate =
+            document.getElementById(
+                "editPaymentDate"
+            ).value;
+
+        const notes =
+            document.getElementById(
+                "editNotes"
+            ).value.trim();
+
+        const message =
+            document.getElementById(
+                "editMessage"
+            );
+
+        if (!contributionMonth) {
+
+            message.textContent =
+                "Please select the contribution month.";
+
+            return;
+        }
 
         if (!amount || amount <= 0) {
 
-            alert(
-                "Please enter a valid amount."
-            );
+            message.textContent =
+                "Please enter a valid amount.";
 
             return;
         }
 
+        if (!paymentDate) {
+
+            message.textContent =
+                "Please select the payment date.";
+
+            return;
+        }
+
+        message.textContent =
+            "Saving changes...";
 
         const {
             error
         } = await supabaseClient
             .from("contributions")
             .update({
-                amount: amount
+                contribution_month:
+                    contributionMonth,
+
+                amount:
+                    amount,
+
+                payment_date:
+                    paymentDate,
+
+                notes:
+                    notes || null
             })
             .eq("id", contributionId);
-
 
         if (error) {
 
             console.error(
-                "Edit contribution error:",
+                "Update contribution error:",
                 error
             );
 
-            alert(
-                "Unable to update contribution: " +
-                error.message
-            );
+            message.textContent =
+                "Error: " + error.message;
 
             return;
         }
 
+        message.textContent =
+            "Changes saved successfully!";
 
         alert(
             "Contribution updated successfully!"
         );
 
+        // Close window
+        document.getElementById(
+            "editContributionModal"
+        ).style.display = "none";
 
+        // Refresh records and totals
         loadContributionRecords();
         loadAdminDashboard();
-    }
-);
+    });
 
 
 // ==========================================
