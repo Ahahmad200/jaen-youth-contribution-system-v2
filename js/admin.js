@@ -1028,6 +1028,96 @@ document.addEventListener("click", async (event) => {
     ).style.display = "block";
 
 });
+// ==========================================
+// SAVE EDITED MEMBER
+// ==========================================
+
+document
+    .getElementById("editMemberForm")
+    .addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        const memberId =
+            document.getElementById("editMemberId").value;
+
+        const memberCode =
+            document.getElementById("editMemberCode").value.trim();
+
+        const fullName =
+            document.getElementById("editMemberName").value.trim();
+
+        const email =
+            document.getElementById("editMemberEmail").value.trim();
+
+        const phone =
+            document.getElementById("editMemberPhone").value.trim();
+
+        const message =
+            document.getElementById("editMemberMessage");
+
+        message.textContent =
+            "Saving changes...";
+
+
+        // Validate
+        if (!memberCode || !fullName) {
+
+            message.textContent =
+                "Member ID and Full Name are required.";
+
+            return;
+        }
+
+
+        // Update member
+        const {
+            error
+        } = await supabaseClient
+            .from("members")
+            .update({
+                member_id: memberCode,
+                full_name: fullName,
+                email: email || null,
+                phone: phone || null
+            })
+            .eq("id", memberId);
+
+
+        if (error) {
+
+            console.error(
+                "Update member error:",
+                error
+            );
+
+            message.textContent =
+                "Error: " + error.message;
+
+            return;
+        }
+
+
+        message.textContent =
+            "Member updated successfully!";
+
+        alert(
+            "Member updated successfully!"
+        );
+
+
+        // Close edit window
+        document.getElementById(
+            "editMemberModal"
+        ).style.display = "none";
+
+
+        // Refresh member information
+        loadMemberManagement();
+        loadMembers();
+        loadAdminDashboard();
+
+    });
 loadMembers();
 loadAdminDashboard();
 loadContributionRecords();
