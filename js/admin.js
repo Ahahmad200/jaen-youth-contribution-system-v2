@@ -842,7 +842,48 @@ if (error) {
         "Error loading member management:",
         error
     );
+// Get all contributions
+const {
+    data: contributions,
+    error: contributionError
+} = await supabaseClient
+    .from("contributions")
+    .select("member_id, amount");
 
+if (contributionError) {
+
+    console.error(
+        "Error loading member contributions:",
+        contributionError
+    );
+
+    list.innerHTML = `
+        <tr>
+            <td colspan="6">
+                Error loading contribution totals:
+                ${contributionError.message}
+            </td>
+        </tr>
+    `;
+
+    return;
+}
+
+// Calculate total for each member
+const memberTotals = {};
+
+contributions.forEach(contribution => {
+
+    const memberId =
+        contribution.member_id;
+
+    if (!memberTotals[memberId]) {
+        memberTotals[memberId] = 0;
+    }
+
+    memberTotals[memberId] +=
+        Number(contribution.amount || 0);
+});
     list.innerHTML = `
         <tr>
             <td colspan="6">
@@ -906,14 +947,20 @@ if (error) {
             </td>
 
             <td>
-                ${member.phone || "N/A"}
-            </td>
+    ${member.phone || "N/A"}
+</td>
 
-            <td>
-                <button>
-                    Edit
-                </button>
-            </td>
+<td>
+    ₦${(
+        memberTotals[member.id] || 0
+    ).toLocaleString()}
+</td>
+
+<td>
+    <button>
+        Edit
+    </button>
+</td>
         `;
 
         list.appendChild(row);
