@@ -826,15 +826,33 @@ async function loadMemberManagement() {
         document.getElementById("adminMemberList");
 
     const {
-        data: members,
+    data: members,
+    error
+} = await supabaseClient
+    .from("members")
+    .select(
+        "id, member_id, full_name, email, phone"
+    )
+    .eq("role", "member")
+    .order("full_name");
+
+if (error) {
+
+    console.error(
+        "Error loading member management:",
         error
-    } = await supabaseClient
-        .from("members")
-        .select(
-            "id, member_id, full_name, email, phone"
-        )
-        .eq("role", "member")
-        .order("full_name");
+    );
+
+    list.innerHTML = `
+        <tr>
+            <td colspan="6">
+                Error: ${error.message}
+            </td>
+        </tr>
+    `;
+
+    return;
+}
 
     if (error) {
 
