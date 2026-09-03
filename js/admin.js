@@ -1118,6 +1118,19 @@ document
         loadAdminDashboard();
 
     });
+// ==========================================
+// CANCEL MEMBER EDIT
+// ==========================================
+
+document
+    .getElementById("cancelMemberEditBtn")
+    .addEventListener("click", () => {
+
+        document.getElementById(
+            "editMemberModal"
+        ).style.display = "none";
+
+    });
 loadMembers();
 loadAdminDashboard();
 loadContributionRecords();
