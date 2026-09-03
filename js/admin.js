@@ -960,10 +960,13 @@ async function loadMemberManagement() {
             </td>
 
             <td>
-                <button>
-                    Edit
-                </button>
-            </td>
+    <button
+        class="editMemberBtn"
+        data-id="${member.id}"
+    >
+        Edit
+    </button>
+</td>
 
         `;
 
