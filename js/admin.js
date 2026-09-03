@@ -205,18 +205,47 @@ const phone =
         }
 
 
-        // Add member
-        const {
-            error
-        } = await supabaseClient
-            .from("members")
-            .insert({
-                member_id: memberId,
-                full_name: fullName,
-                email: email || null,
-                phone: phone || null,
-                role: "member"
-            });
+        // Create member account securely
+const {
+    data: functionData,
+    error: functionError
+} = await supabaseClient.functions.invoke(
+    "create-member",
+    {
+        body: {
+            memberId: memberId,
+            email: email,
+            password: password
+        }
+    }
+);
+
+
+if (functionError) {
+
+    console.error(
+        "Create member function error:",
+        functionError
+    );
+
+    message.textContent =
+        "Error: " + functionError.message;
+
+    return;
+}
+
+
+if (functionData?.error) {
+
+    message.textContent =
+        "Error: " + functionData.error;
+
+    return;
+}
+
+
+message.textContent =
+    "Member account created successfully!";
 
         if (error) {
 
