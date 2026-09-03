@@ -213,10 +213,12 @@ const {
     "create-member",
     {
         body: {
-            memberId: memberId,
-            email: email,
-            password: password
-        }
+    memberId: memberId,
+    fullName: fullName,
+    email: email,
+    password: password,
+    phone: phone
+}
     }
 );
 
