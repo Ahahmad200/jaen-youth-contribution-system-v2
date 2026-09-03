@@ -327,6 +327,87 @@
     </div>
 
 </div>
+ <!-- ==========================================
+     EDIT MEMBER WINDOW
+========================================== -->
+
+<div id="editMemberModal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>Edit Member</h2>
+
+        <form id="editMemberForm">
+
+            <input
+                type="hidden"
+                id="editMemberId"
+            >
+
+            <label for="editMemberCode">
+                Member ID
+            </label>
+
+            <input
+                type="text"
+                id="editMemberCode"
+                required
+            >
+
+            <br><br>
+
+            <label for="editMemberName">
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                id="editMemberName"
+                required
+            >
+
+            <br><br>
+
+            <label for="editMemberEmail">
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="editMemberEmail"
+            >
+
+            <br><br>
+
+            <label for="editMemberPhone">
+                Phone
+            </label>
+
+            <input
+                type="text"
+                id="editMemberPhone"
+            >
+
+            <br><br>
+
+            <button type="submit">
+                Save Changes
+            </button>
+
+            <button
+                type="button"
+                id="cancelMemberEditBtn"
+            >
+                Cancel
+            </button>
+
+            <p id="editMemberMessage"></p>
+
+        </form>
+
+    </div>
+
+</div>   
 <!-- Supabase library -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
