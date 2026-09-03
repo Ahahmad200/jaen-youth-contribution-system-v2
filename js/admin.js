@@ -152,10 +152,13 @@ document
             document.getElementById("newMemberName").value.trim();
 
         const email =
-            document.getElementById("newMemberEmail").value.trim();
+    document.getElementById("newMemberEmail").value.trim();
 
-        const phone =
-            document.getElementById("newMemberPhone").value.trim();
+const password =
+    document.getElementById("newMemberPassword").value;
+
+const phone =
+    document.getElementById("newMemberPhone").value.trim();
 
         const message =
             document.getElementById("memberMessage");
