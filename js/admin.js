@@ -825,101 +825,100 @@ async function loadMemberManagement() {
     const list =
         document.getElementById("adminMemberList");
 
+
+    // Get all members
     const {
-    data: members,
-    error
-} = await supabaseClient
-    .from("members")
-    .select(
-        "id, member_id, full_name, email, phone"
-    )
-    .eq("role", "member")
-    .order("full_name");
+        data: members,
+        error: memberError
+    } = await supabaseClient
+        .from("members")
+        .select(
+            "id, member_id, full_name, email, phone"
+        )
+        .eq("role", "member")
+        .order("full_name");
 
-if (error) {
 
-    console.error(
-        "Error loading member management:",
-        error
-    );
-// Get all contributions
-const {
-    data: contributions,
-    error: contributionError
-} = await supabaseClient
-    .from("contributions")
-    .select("member_id, amount");
+    if (memberError) {
 
-if (contributionError) {
+        console.error(
+            "Error loading member management:",
+            memberError
+        );
 
-    console.error(
-        "Error loading member contributions:",
-        contributionError
-    );
+        list.innerHTML = `
+            <tr>
+                <td colspan="6">
+                    Error: ${memberError.message}
+                </td>
+            </tr>
+        `;
 
-    list.innerHTML = `
-        <tr>
-            <td colspan="6">
-                Error loading contribution totals:
-                ${contributionError.message}
-            </td>
-        </tr>
-    `;
-
-    return;
-}
-
-// Calculate total for each member
-const memberTotals = {};
-
-contributions.forEach(contribution => {
-
-    const memberId =
-        contribution.member_id;
-
-    if (!memberTotals[memberId]) {
-        memberTotals[memberId] = 0;
+        return;
     }
 
-    memberTotals[memberId] +=
-        Number(contribution.amount || 0);
-});
-    list.innerHTML = `
-        <tr>
-            <td colspan="6">
-                Error: ${error.message}
-            </td>
-        </tr>
-    `;
 
-    return;
-}
+    // Get all contributions
+    const {
+        data: contributions,
+        error: contributionError
+    } = await supabaseClient
+        .from("contributions")
+        .select("member_id, amount");
 
-    if (error) {
 
-    console.error(
-        "Error loading member management:",
-        error
-    );
+    if (contributionError) {
 
-    list.innerHTML = `
-        <tr>
-            <td colspan="5">
-                Error: ${error.message}
-            </td>
-        </tr>
-    `;
+        console.error(
+            "Error loading member contributions:",
+            contributionError
+        );
 
-    return;
+        list.innerHTML = `
+            <tr>
+                <td colspan="6">
+                    Error loading contribution totals:
+                    ${contributionError.message}
+                </td>
+            </tr>
+        `;
+
+        return;
     }
 
+
+    // Calculate total contribution for each member
+    const memberTotals = {};
+
+
+    contributions.forEach(contribution => {
+
+        const memberId =
+            contribution.member_id;
+
+
+        if (!memberTotals[memberId]) {
+
+            memberTotals[memberId] = 0;
+        }
+
+
+        memberTotals[memberId] +=
+            Number(contribution.amount || 0);
+
+    });
+
+
+    // Clear table
     list.innerHTML = "";
 
+
+    // No members
     if (!members || members.length === 0) {
 
         list.innerHTML = `
             <tr>
-                <td colspan="5">
+                <td colspan="6">
                     No members found.
                 </td>
             </tr>
@@ -928,12 +927,16 @@ contributions.forEach(contribution => {
         return;
     }
 
+
+    // Display members
     members.forEach(member => {
 
         const row =
             document.createElement("tr");
 
+
         row.innerHTML = `
+
             <td>
                 ${member.full_name || "N/A"}
             </td>
@@ -947,24 +950,28 @@ contributions.forEach(contribution => {
             </td>
 
             <td>
-    ${member.phone || "N/A"}
-</td>
+                ${member.phone || "N/A"}
+            </td>
 
-<td>
-    ₦${(
-        memberTotals[member.id] || 0
-    ).toLocaleString()}
-</td>
+            <td>
+                ₦${(
+                    memberTotals[member.id] || 0
+                ).toLocaleString()}
+            </td>
 
-<td>
-    <button>
-        Edit
-    </button>
-</td>
+            <td>
+                <button>
+                    Edit
+                </button>
+            </td>
+
         `;
 
+
         list.appendChild(row);
+
     });
+
 }
 loadMembers();
 loadAdminDashboard();
