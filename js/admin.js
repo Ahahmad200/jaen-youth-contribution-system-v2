@@ -976,6 +976,58 @@ async function loadMemberManagement() {
     });
 
 }
+// ==========================================
+// OPEN EDIT MEMBER WINDOW
+// ==========================================
+
+document.addEventListener("click", async (event) => {
+
+    if (!event.target.classList.contains("editMemberBtn")) {
+        return;
+    }
+
+    const memberId = event.target.dataset.id;
+
+    const {
+        data: member,
+        error
+    } = await supabaseClient
+        .from("members")
+        .select("id, member_id, full_name, email, phone")
+        .eq("id", memberId)
+        .single();
+
+    if (error || !member) {
+
+        console.error("Error loading member:", error);
+
+        alert("Unable to load member.");
+
+        return;
+    }
+
+    // Put member information into the edit form
+    document.getElementById("editMemberId").value =
+        member.id;
+
+    document.getElementById("editMemberCode").value =
+        member.member_id || "";
+
+    document.getElementById("editMemberName").value =
+        member.full_name || "";
+
+    document.getElementById("editMemberEmail").value =
+        member.email || "";
+
+    document.getElementById("editMemberPhone").value =
+        member.phone || "";
+
+    // Open the edit window
+    document.getElementById(
+        "editMemberModal"
+    ).style.display = "block";
+
+});
 loadMembers();
 loadAdminDashboard();
 loadContributionRecords();
