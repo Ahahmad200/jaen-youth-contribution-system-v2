@@ -1476,3 +1476,56 @@ if (financeForm) {
 // Load finance information
 loadFinanceRecords();
 loadAssociationBalance();
+// ==========================================
+// DELETE FINANCIAL RECORD
+// ==========================================
+
+document.addEventListener("click", async (event) => {
+
+    if (!event.target.classList.contains("deleteFinanceBtn")) {
+        return;
+    }
+
+    const financeId =
+        event.target.dataset.id;
+
+    const confirmed = confirm(
+        "Are you sure you want to delete this financial record?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const { error } =
+        await supabaseClient
+            .from("financial_transactions")
+            .delete()
+            .eq("id", financeId);
+
+    if (error) {
+
+        console.error(
+            "Delete financial record error:",
+            error
+        );
+
+        alert(
+            "Unable to delete financial record: " +
+            error.message
+        );
+
+        return;
+    }
+
+    alert(
+        "Financial record deleted successfully!"
+    );
+
+    // Refresh financial records
+    loadFinanceRecords();
+
+    // Refresh balance
+    loadAssociationBalance();
+
+});
