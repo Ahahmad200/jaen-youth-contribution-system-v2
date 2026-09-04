@@ -1258,40 +1258,58 @@ async function loadFinanceRecords() {
 
     records.forEach(record => {
 
-        const row =
-            document.createElement("tr");
+    const row =
+        document.createElement("tr");
 
-        const type =
-            record.transaction_type === "income"
-                ? "Donation / Income"
-                : "Expense";
+    const type =
+        record.transaction_type === "income"
+            ? "Donation / Income"
+            : "Expense";
 
-        row.innerHTML = `
-            <td>
-                ${record.transaction_date || ""}
-            </td>
+    row.innerHTML = `
+        <td>
+            ${record.transaction_date || ""}
+        </td>
 
-            <td>
-                ${type}
-            </td>
+        <td>
+            ${type}
+        </td>
 
-            <td>
-                ₦${Number(
-                    record.amount || 0
-                ).toLocaleString()}
-            </td>
+        <td>
+            ₦${Number(
+                record.amount || 0
+            ).toLocaleString()}
+        </td>
 
-            <td>
-                ${record.category || ""}
-            </td>
+        <td>
+            ${record.category || ""}
+        </td>
 
-            <td>
-                ${record.description || ""}
-            </td>
-        `;
+        <td>
+            ${record.description || ""}
+        </td>
 
-        list.appendChild(row);
-    });
+        <td>
+
+            <button
+                class="editFinanceBtn"
+                data-id="${record.id}"
+            >
+                Edit
+            </button>
+
+            <button
+                class="deleteFinanceBtn"
+                data-id="${record.id}"
+            >
+                Delete
+            </button>
+
+        </td>
+    `;
+
+    list.appendChild(row);
+});
 }
 
 
