@@ -1529,3 +1529,138 @@ document.addEventListener("click", async (event) => {
     loadAssociationBalance();
 
 });
+// ==========================================
+// EDIT FINANCIAL RECORD
+// ==========================================
+
+document.addEventListener("click", async (event) => {
+
+    if (!event.target.classList.contains("editFinanceBtn")) {
+        return;
+    }
+
+    const financeId = event.target.dataset.id;
+
+    const { data: record, error } =
+        await supabaseClient
+            .from("financial_transactions")
+            .select("*")
+            .eq("id", financeId)
+            .single();
+
+    if (error) {
+        console.error("Load financial record error:", error);
+        alert("Unable to load financial record.");
+        return;
+    }
+
+    document.getElementById("editFinanceId").value = record.id;
+    document.getElementById("editFinanceType").value = record.transaction_type;
+    document.getElementById("editFinanceAmount").value = record.amount;
+    document.getElementById("editFinanceDate").value = record.transaction_date;
+    document.getElementById("editFinanceCategory").value = record.category || "";
+    document.getElementById("editFinanceDescription").value = record.description || "";
+
+    document.getElementById("editFinanceMessage").textContent = "";
+
+    document.getElementById("editFinanceModal").style.display = "block";
+});
+
+
+// ==========================================
+// CANCEL FINANCIAL RECORD EDIT
+// ==========================================
+
+const cancelFinanceEditBtn =
+    document.getElementById("cancelFinanceEditBtn");
+
+if (cancelFinanceEditBtn) {
+
+    cancelFinanceEditBtn.addEventListener("click", () => {
+
+        document.getElementById("editFinanceModal").style.display = "none";
+
+    });
+
+}
+
+
+// ==========================================
+// SAVE EDITED FINANCIAL RECORD
+// ==========================================
+
+const editFinanceForm =
+    document.getElementById("editFinanceForm");
+
+if (editFinanceForm) {
+
+    editFinanceForm.addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        const financeId =
+            document.getElementById("editFinanceId").value;
+
+        const type =
+            document.getElementById("editFinanceType").value;
+
+        const amount =
+            Number(document.getElementById("editFinanceAmount").value);
+
+        const date =
+            document.getElementById("editFinanceDate").value;
+
+        const category =
+            document.getElementById("editFinanceCategory").value.trim();
+
+        const description =
+            document.getElementById("editFinanceDescription").value.trim();
+
+        const message =
+            document.getElementById("editFinanceMessage");
+
+        message.textContent = "Saving changes...";
+
+        if (!financeId || !type || !amount || !date) {
+
+            message.textContent =
+                "Please complete all required fields.";
+
+            return;
+        }
+
+        const { error } =
+            await supabaseClient
+                .from("financial_transactions")
+                .update({
+                    transaction_type: type,
+                    amount: amount,
+                    transaction_date: date,
+                    category: category || null,
+                    description: description || null
+                })
+                .eq("id", financeId);
+
+        if (error) {
+
+            console.error(
+                "Update financial record error:",
+                error
+            );
+
+            message.textContent =
+                "Error: " + error.message;
+
+            return;
+        }
+
+        message.textContent =
+            "Financial record updated successfully!";
+
+        document.getElementById("editFinanceModal").style.display = "none";
+
+        loadFinanceRecords();
+        loadAssociationBalance();
+    });
+
+}
