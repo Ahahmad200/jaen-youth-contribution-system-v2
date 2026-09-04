@@ -1,4 +1,4 @@
-// ==========================================
+K// ==========================================
 // LOAD MEMBERS
 // ==========================================
 
@@ -1169,3 +1169,292 @@ loadMembers();
 loadAdminDashboard();
 loadContributionRecords();
 loadMemberManagement();
+// ==========================================
+// ASSOCIATION FINANCE
+// ==========================================
+
+async function loadAssociationBalance() {
+
+    const balanceElement =
+        document.getElementById("associationBalance");
+
+    if (!balanceElement) {
+        return;
+    }
+
+    const { data, error } =
+        await supabaseClient.rpc(
+            "get_association_balance"
+        );
+
+    if (error) {
+        console.error(
+            "Error loading association balance:",
+            error
+        );
+
+        balanceElement.textContent =
+            "Unable to load balance";
+
+        return;
+    }
+
+    balanceElement.textContent =
+        "₦" + Number(data || 0).toLocaleString();
+}
+
+
+async function loadFinanceRecords() {
+
+    const list =
+        document.getElementById("financeRecords");
+
+    if (!list) {
+        return;
+    }
+
+    const {
+        data: records,
+        error
+    } = await supabaseClient
+        .from("financial_transactions")
+        .select("*")
+        .order("transaction_date", {
+            ascending: false
+        });
+
+    if (error) {
+
+        console.error(
+            "Error loading financial records:",
+            error
+        );
+
+        list.innerHTML = `
+            <tr>
+                <td colspan="5">
+                    Error loading financial records.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    list.innerHTML = "";
+
+    if (!records || records.length === 0) {
+
+        list.innerHTML = `
+            <tr>
+                <td colspan="5">
+                    No financial records yet.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    records.forEach(record => {
+
+        const row =
+            document.createElement("tr");
+
+        const type =
+            record.transaction_type === "income"
+                ? "Donation / Income"
+                : "Expense";
+
+        row.innerHTML = `
+            <td>
+                ${record.transaction_date || ""}
+            </td>
+
+            <td>
+                ${type}
+            </td>
+
+            <td>
+                ₦${Number(
+                    record.amount || 0
+                ).toLocaleString()}
+            </td>
+
+            <td>
+                ${record.category || ""}
+            </td>
+
+            <td>
+                ${record.description || ""}
+            </td>
+        `;
+
+        list.appendChild(row);
+    });
+}
+
+
+const financeForm =
+    document.getElementById("financeForm");
+
+
+if (financeForm) {
+
+    financeForm.addEventListener(
+        "submit",
+        async (event) => {
+
+            event.preventDefault();
+
+            const type =
+                document.getElementById(
+                    "financeType"
+                ).value;
+
+            const amount =
+                Number(
+                    document.getElementById(
+                        "financeAmount"
+                    ).value
+                );
+
+            const date =
+                document.getElementById(
+                    "financeDate"
+                ).value;
+
+            const category =
+                document.getElementById(
+                    "financeCategory"
+                ).value.trim();
+
+            const description =
+                document.getElementById(
+                    "financeDescription"
+                ).value.trim();
+
+            const message =
+                document.getElementById(
+                    "financeMessage"
+                );
+
+            message.textContent =
+                "Saving financial record...";
+
+
+            if (!type || !amount || !date) {
+
+                message.textContent =
+                    "Please complete all required fields.";
+
+                return;
+            }
+
+
+            const {
+                data: {
+                    user
+                }
+            } =
+                await supabaseClient.auth.getUser();
+
+
+            if (!user) {
+
+                message.textContent =
+                    "You must be logged in.";
+
+                return;
+            }
+
+
+            const {
+                data: admin,
+                error: adminError
+            } =
+                await supabaseClient
+                    .from("members")
+                    .select("id")
+                    .eq(
+                        "auth_user_id",
+                        user.id
+                    )
+                    .eq(
+                        "role",
+                        "admin"
+                    )
+                    .single();
+
+
+            if (adminError || !admin) {
+
+                message.textContent =
+                    "Administrator permission required.";
+
+                return;
+            }
+
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from(
+                        "financial_transactions"
+                    )
+                    .insert({
+
+                        transaction_type:
+                            type,
+
+                        amount:
+                            amount,
+
+                        transaction_date:
+                            date,
+
+                        category:
+                            category || null,
+
+                        description:
+                            description || null,
+
+                        recorded_by:
+                            admin.id
+                    });
+
+
+            if (error) {
+
+                console.error(
+                    "Save financial record error:",
+                    error
+                );
+
+                message.textContent =
+                    "Error: " +
+                    error.message;
+
+                return;
+            }
+
+
+            message.textContent =
+                "Financial record saved successfully!";
+
+
+            financeForm.reset();
+
+
+            loadFinanceRecords();
+
+            loadAssociationBalance();
+        }
+    );
+}
+
+
+// Load finance information
+loadFinanceRecords();
+loadAssociationBalance();
