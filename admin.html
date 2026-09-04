@@ -371,6 +371,95 @@
     </tbody>
 
 </table>
+        <!-- ==========================================
+     EDIT FINANCIAL RECORD WINDOW
+========================================== -->
+
+<div id="editFinanceModal" class="modal">
+    <div class="modal-content">
+
+        <h2>Edit Financial Record</h2>
+
+        <form id="editFinanceForm">
+
+            <input type="hidden" id="editFinanceId">
+
+            <label for="editFinanceType">
+                Transaction Type
+            </label>
+
+            <select id="editFinanceType" required>
+                <option value="income">Donation / Income</option>
+                <option value="expense">Expense / Spending</option>
+            </select>
+
+            <br><br>
+
+            <label for="editFinanceAmount">
+                Amount (₦)
+            </label>
+
+            <input
+                type="number"
+                id="editFinanceAmount"
+                min="1"
+                step="0.01"
+                required
+            >
+
+            <br><br>
+
+            <label for="editFinanceDate">
+                Date
+            </label>
+
+            <input
+                type="date"
+                id="editFinanceDate"
+                required
+            >
+
+            <br><br>
+
+            <label for="editFinanceCategory">
+                Category
+            </label>
+
+            <input
+                type="text"
+                id="editFinanceCategory"
+            >
+
+            <br><br>
+
+            <label for="editFinanceDescription">
+                Description
+            </label>
+
+            <textarea
+                id="editFinanceDescription"
+                rows="4"
+            ></textarea>
+
+            <br><br>
+
+            <button type="submit">
+                Save Changes
+            </button>
+
+            <button
+                type="button"
+                id="cancelFinanceEditBtn"
+            >
+                Cancel
+            </button>
+
+            <p id="editFinanceMessage"></p>
+
+        </form>
+
+    </div>
+</div>
 <p id="contributionMessage"></p>
 
 <hr>
