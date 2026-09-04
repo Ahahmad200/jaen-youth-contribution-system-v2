@@ -1232,7 +1232,7 @@ async function loadFinanceRecords() {
 
         list.innerHTML = `
             <tr>
-                <td colspan="5">
+                <td colspan="6">
                     Error loading financial records.
                 </td>
             </tr>
@@ -1247,7 +1247,7 @@ async function loadFinanceRecords() {
 
         list.innerHTML = `
             <tr>
-                <td colspan="5">
+                <td colspan="6">
                     No financial records yet.
                 </td>
             </tr>
