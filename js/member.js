@@ -174,3 +174,41 @@ document
         window.print();
     });
 loadMemberDashboard();
+// ==========================================
+// LOAD ASSOCIATION BALANCE
+// ==========================================
+
+async function loadAssociationBalance() {
+
+    const balanceElement =
+        document.getElementById("associationBalance");
+
+    if (!balanceElement) {
+        return;
+    }
+
+    const { data, error } =
+        await supabaseClient.rpc(
+            "get_association_balance"
+        );
+
+    if (error) {
+
+        console.error(
+            "Error loading association balance:",
+            error
+        );
+
+        balanceElement.textContent =
+            "Unable to load";
+
+        return;
+    }
+
+    balanceElement.textContent =
+        Number(data || 0).toLocaleString();
+}
+
+
+// Load association balance
+loadAssociationBalance();
