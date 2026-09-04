@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+8<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -244,7 +244,132 @@
     </button>
 
 </form>
+<hr>
 
+<h2>Association Finance</h2>
+
+<div class="card">
+
+    <h3>Current Association Balance</h3>
+
+    <h1 id="associationBalance">
+        ₦0
+    </h1>
+
+</div>
+
+<br>
+
+<h3>Record Donation / Income or Expense</h3>
+
+<form id="financeForm">
+
+    <label for="financeType">
+        Transaction Type
+    </label>
+
+    <select id="financeType" required>
+
+        <option value="">
+            Select transaction type
+        </option>
+
+        <option value="income">
+            Donation / Income
+        </option>
+
+        <option value="expense">
+            Expense / Spending
+        </option>
+
+    </select>
+
+    <br><br>
+
+    <label for="financeAmount">
+        Amount (₦)
+    </label>
+
+    <input
+        type="number"
+        id="financeAmount"
+        min="1"
+        step="0.01"
+        placeholder="Enter amount"
+        required
+    >
+
+    <br><br>
+
+    <label for="financeDate">
+        Date
+    </label>
+
+    <input
+        type="date"
+        id="financeDate"
+        required
+    >
+
+    <br><br>
+
+    <label for="financeCategory">
+        Category
+    </label>
+
+    <input
+        type="text"
+        id="financeCategory"
+        placeholder="e.g. Donation, Food, Transport"
+    >
+
+    <br><br>
+
+    <label for="financeDescription">
+        Description
+    </label>
+
+    <textarea
+        id="financeDescription"
+        placeholder="Enter details about this transaction"
+        rows="4"
+    ></textarea>
+
+    <br><br>
+
+    <button type="submit">
+        Save Financial Record
+    </button>
+
+    <p id="financeMessage"></p>
+
+</form>
+
+<br>
+
+<h3>Financial Records</h3>
+
+<table>
+
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+
+    <tbody id="financeRecords">
+        <tr>
+            <td colspan="5">
+                No financial records yet.
+            </td>
+        </tr>
+    </tbody>
+
+</table>
 <p id="contributionMessage"></p>
 
 <hr>
