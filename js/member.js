@@ -88,7 +88,8 @@ async function loadMemberDashboard() {
 
     document.getElementById("memberTotal").textContent =
         total.toLocaleString();
-
+document.getElementById("statementMemberTotal").textContent =
+    total.toLocaleString();
 
     // Display contribution history
     const list =
