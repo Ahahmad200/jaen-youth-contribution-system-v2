@@ -249,18 +249,11 @@ if (functionData?.error) {
 message.textContent =
     "Member account created successfully!";
 
-        if (error) {
+        message.textContent =
+    "Member account created successfully!";
 
-            console.error(
-                "Add member error:",
-                error
-            );
-
-            message.textContent =
-                "Error: " + error.message;
-
-            return;
-        }
+message.textContent =
+    "Member added successfully!";
 
 
         message.textContent =
