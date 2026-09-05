@@ -16,145 +16,174 @@
 
     <div class="card">
 
-        <h1>Jaen Youth Brothers Association Hub</h1>
+        <!-- ==========================================
+             NORMAL MEMBER DASHBOARD
+        =========================================== -->
 
-        <h2>Member Dashboard</h2>
+        <div class="dashboardOnly">
 
-        <p>
-            Welcome,
-            <strong id="memberName">Loading...</strong>
-        </p>
+            <h1>Jaen Youth Brothers Association Hub</h1>
 
-        <p>
-            Member ID:
-            <strong id="memberId">Loading...</strong>
-        </p>
+            <h2>Member Dashboard</h2>
 
-        <hr
+            <p>
+                Welcome,
+                <strong id="memberName">Loading...</strong>
+            </p>
 
-        <div class="card">
+            <p>
+                Member ID:
+                <strong id="memberId">Loading...</strong>
+            </p>
+
             <hr>
 
-<div class="card">
-    <h2>Total Contribution</h2>
+            <div class="card">
+                <h2>Total Contribution</h2>
 
-    <h1>
-        ₦<span id="memberTotal">0</span>
-    </h1>
-</div>
+                <h1>
+                    ₦<span id="memberTotal">0</span>
+                </h1>
+            </div>
 
-<div class="card">
-    <h2>Association Balance</h2>
+            <div class="card">
+                <h2>Association Balance</h2>
 
-    <h1>
-        ₦<span id="associationBalance">0</span>
-    </h1>
-</div>
+                <h1>
+                    ₦<span id="associationBalance">0</span>
+                </h1>
+            </div>
 
-<hr>
+            <hr>
 
-<h2>My Contribution History</h2>
+            <h2>My Contribution History</h2>
 
-        <h2>My Contribution History</h2>
+            <label for="monthFilter">
+                Search by Month:
+            </label>
 
-<label for="monthFilter">
-    Search by Month:
-</label>
+            <input
+                type="month"
+                id="monthFilter"
+            >
 
-<input
-    type="month"
-    id="monthFilter"
->
+            <br><br>
 
-<br><br>
+        </div>
 
-<div class="table-container">
 
-    <table>
+        <!-- ==========================================
+             PRINTABLE STATEMENT
+        =========================================== -->
 
-        <thead>
-            <tr>
-                <th>Contribution Month</th>
-                <th>Amount</th>
-                <th>Payment Date</th>
-                <th>Notes</th>
-            </tr>
-        </thead>
+        <div class="printStatementHeader">
 
-        <tbody id="contributionList">
-            <tr>
-                <td colspan="4">
-                    Loading contributions...
-                </td>
-            </tr>
-        </tbody>
+            <h1>JAEN YOUTH BROTHERS ASSOCIATION HUB</h1>
 
-    </table>
+            <h2>MEMBER CONTRIBUTION STATEMENT</h2>
 
-</div>
-<<div class="printStatementHeader">
+            <p>
+                Official record of member contributions
+            </p>
 
-    <h1>JAEN YOUTH BROTHERS ASSOCIATION HUB</h1>
+            <div class="statementMemberDetails">
 
-    <h2>MEMBER CONTRIBUTION STATEMENT</h2>
+                <p>
+                    <strong>Member Name:</strong>
+                    <span id="statementMemberName">—</span>
+                </p>
 
-    <p>
-        Official record of member contributions
-    </p>
+                <p>
+                    <strong>Member ID:</strong>
+                    <span id="statementMemberId">—</span>
+                </p>
 
-    <div class="statementMemberDetails">
+                <p>
+                    <strong>Statement Date:</strong>
+                    <span id="statementDate">—</span>
+                </p>
 
-        <p>
-            <strong>Member Name:</strong>
-            <span id="statementMemberName">—</span>
-        </p>
+            </div>
 
-        <p>
-            <strong>Member ID:</strong>
-            <span id="statementMemberId">—</span>
-        </p>
+            <div class="statementFinancialSummary">
 
-        <p>
-            <strong>Statement Date:</strong>
-            <span id="statementDate">—</span>
-        </p>
+                <p>
+                    <strong>Total Contribution:</strong>
+                    ₦<span id="statementMemberTotal">0</span>
+                </p>
+
+                <p>
+                    <strong>Association Balance:</strong>
+                    ₦<span id="statementAssociationBalance">0</span>
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             CONTRIBUTION HISTORY TABLE
+        =========================================== -->
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Contribution Month</th>
+                        <th>Amount</th>
+                        <th>Payment Date</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+
+                <tbody id="contributionList">
+
+                    <tr>
+                        <td colspan="4">
+                            Loading contributions...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ==========================================
+             DASHBOARD BUTTONS
+        =========================================== -->
+
+        <div class="dashboardOnly">
+
+            <hr>
+
+            <button id="printStatementBtn">
+                🧾 Print Contribution Statement
+            </button>
+
+            <br><br>
+
+            <button id="logoutBtn">
+                Logout
+            </button>
+
+        </div>
 
     </div>
-<div class="statementFinancialSummary">
-
-    <p>
-        <strong>Total Contribution:</strong>
-        ₦<span id="statementMemberTotal">0</span>
-    </p>
-
-    <p>
-        <strong>Association Balance:</strong>
-        ₦<span id="statementAssociationBalance">0</span>
-    </p>
 
 </div>
-</div>
-        <hr>
 
-        <button id="printStatementBtn">
-    🧾 Print Contribution Statement
-</button>
-
-<br><br>
-
-<button id="logoutBtn">
-    Logout
-</button>
-
-    </div>
-
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="js/supabase.js"></script>
 
-<script src="js/member.js?v=2"></script>
+<script src="js/member.js?v=3"></script>
 
 </body>
 </html>
