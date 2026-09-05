@@ -216,6 +216,13 @@ async function loadAssociationBalance() {
 
     balanceElement.textContent =
         Number(data || 0).toLocaleString();
+    const statementBalanceElement =
+    document.getElementById("statementAssociationBalance");
+
+if (statementBalanceElement) {
+    statementBalanceElement.textContent =
+        Number(data || 0).toLocaleString();
+}
 }
 
 
