@@ -17,7 +17,24 @@
     <div class="card">
 
         <h1>Administrator Dashboard</h1>
+        
+<nav class="admin-nav">
+    <button type="button" onclick="showAdminSection('overviewSection')">
+        Overview
+    </button>
 
+    <button type="button" onclick="showAdminSection('membersSection')">
+        Members
+    </button>
+
+    <button type="button" onclick="showAdminSection('contributionsSection')">
+        Contributions
+    </button>
+
+    <button type="button" onclick="showAdminSection('financeSection')">
+        Finance
+    </button>
+</nav>
         <p>
             Welcome,
             <strong id="adminName">Loading...</strong>
