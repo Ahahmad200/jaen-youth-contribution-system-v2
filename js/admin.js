@@ -244,18 +244,6 @@ if (functionData?.error) {
 
     return;
 }
-
-
-message.textContent =
-    "Member account created successfully!";
-
-        message.textContent =
-    "Member account created successfully!";
-
-message.textContent =
-    "Member added successfully!";
-
-
         message.textContent =
             "Member added successfully!";
 
