@@ -39,7 +39,15 @@ async function loadMemberDashboard() {
 
     document.getElementById("memberId").textContent =
         member.member_id;
+        // Fill printable statement details
+    document.getElementById("statementMemberName").textContent =
+        member.full_name;
 
+    document.getElementById("statementMemberId").textContent =
+        member.member_id;
+
+    document.getElementById("statementDate").textContent =
+        new Date().toLocaleDateString();
 
     // Get this member's contributions
     const {
