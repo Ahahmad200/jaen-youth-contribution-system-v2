@@ -9,11 +9,8 @@ async function loadMemberDashboard() {
         error: authError
     } = await supabaseClient.auth.getUser();
 
-
     if (authError || !user) {
-
         window.location.href = "index.html";
-
         return;
     }
 
@@ -31,17 +28,13 @@ async function loadMemberDashboard() {
         .eq("auth_user_id", user.id)
         .single();
 
-
     if (
         memberError ||
         !member ||
         member.role !== "member"
     ) {
-
         await supabaseClient.auth.signOut();
-
         window.location.href = "index.html";
-
         return;
     }
 
@@ -122,11 +115,15 @@ async function loadMemberDashboard() {
 
 
     // Normal dashboard total
-    document.getElementById("memberTotal").textContent =
+
+    document.getElementById(
+        "memberTotal"
+    ).textContent =
         total.toLocaleString();
 
 
     // Printable statement total
+
     document.getElementById(
         "statementMemberTotal"
     ).textContent =
@@ -138,7 +135,9 @@ async function loadMemberDashboard() {
     // ==========================================
 
     const list =
-        document.getElementById("contributionList");
+        document.getElementById(
+            "contributionList"
+        );
 
     list.innerHTML = "";
 
@@ -164,7 +163,6 @@ async function loadMemberDashboard() {
 
 
         row.innerHTML = `
-
             <td>
                 ${contribution.contribution_month}
             </td>
@@ -182,7 +180,6 @@ async function loadMemberDashboard() {
             <td>
                 ${contribution.notes || "—"}
             </td>
-
         `;
 
 
@@ -325,11 +322,13 @@ async function loadAssociationBalance() {
 
 
     // Normal dashboard balance
+
     balanceElement.textContent =
         balance.toLocaleString();
 
 
     // Printable statement balance
+
     const statementBalanceElement =
         document.getElementById(
             "statementAssociationBalance"
