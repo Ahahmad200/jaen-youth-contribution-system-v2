@@ -49,6 +49,8 @@ select {
 
     body {
         background: white;
+        color: black;
+        font-family: Arial, sans-serif;
     }
 
     #monthFilter,
@@ -60,6 +62,7 @@ select {
 
     .container {
         width: 100%;
+        max-width: none;
         margin: 0;
         padding: 0;
     }
@@ -71,15 +74,18 @@ select {
 
     h1 {
         text-align: center;
+        margin-bottom: 5px;
     }
 
     h2 {
         text-align: center;
+        margin-top: 10px;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
+        margin-top: 15px;
     }
 
     th,
@@ -91,6 +97,12 @@ select {
 
     th {
         font-weight: bold;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid #000;
+        margin: 15px 0;
     }
 }
 /* ==========================================
