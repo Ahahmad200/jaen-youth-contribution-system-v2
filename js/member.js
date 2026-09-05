@@ -1,3 +1,7 @@
+// ==========================================
+// LOAD MEMBER DASHBOARD
+// ==========================================
+
 async function loadMemberDashboard() {
 
     const {
@@ -5,13 +9,19 @@ async function loadMemberDashboard() {
         error: authError
     } = await supabaseClient.auth.getUser();
 
+
     if (authError || !user) {
+
         window.location.href = "index.html";
+
         return;
     }
 
 
-    // Find the logged-in member
+    // ==========================================
+    // FIND LOGGED-IN MEMBER
+    // ==========================================
+
     const {
         data: member,
         error: memberError
@@ -27,19 +37,30 @@ async function loadMemberDashboard() {
         !member ||
         member.role !== "member"
     ) {
+
         await supabaseClient.auth.signOut();
+
         window.location.href = "index.html";
+
         return;
     }
 
 
-    // Display member information
+    // ==========================================
+    // DISPLAY MEMBER INFORMATION
+    // ==========================================
+
     document.getElementById("memberName").textContent =
         member.full_name;
 
     document.getElementById("memberId").textContent =
         member.member_id;
-        // Fill printable statement details
+
+
+    // ==========================================
+    // PRINTABLE STATEMENT MEMBER INFORMATION
+    // ==========================================
+
     document.getElementById("statementMemberName").textContent =
         member.full_name;
 
@@ -49,7 +70,11 @@ async function loadMemberDashboard() {
     document.getElementById("statementDate").textContent =
         new Date().toLocaleDateString();
 
-    // Get this member's contributions
+
+    // ==========================================
+    // GET MEMBER CONTRIBUTIONS
+    // ==========================================
+
     const {
         data: contributions,
         error: contributionError
@@ -71,14 +96,24 @@ async function loadMemberDashboard() {
             contributionError
         );
 
-        document.getElementById("contributionList").textContent =
-            "Unable to load contributions.";
+        document.getElementById(
+            "contributionList"
+        ).innerHTML = `
+            <tr>
+                <td colspan="4">
+                    Unable to load contributions.
+                </td>
+            </tr>
+        `;
 
         return;
     }
 
 
-    // Calculate total
+    // ==========================================
+    // CALCULATE TOTAL CONTRIBUTION
+    // ==========================================
+
     const total = contributions.reduce(
         (sum, contribution) =>
             sum + Number(contribution.amount || 0),
@@ -86,12 +121,22 @@ async function loadMemberDashboard() {
     );
 
 
+    // Normal dashboard total
     document.getElementById("memberTotal").textContent =
         total.toLocaleString();
-document.getElementById("statementMemberTotal").textContent =
-    total.toLocaleString();
 
-    // Display contribution history
+
+    // Printable statement total
+    document.getElementById(
+        "statementMemberTotal"
+    ).textContent =
+        total.toLocaleString();
+
+
+    // ==========================================
+    // DISPLAY CONTRIBUTION HISTORY
+    // ==========================================
+
     const list =
         document.getElementById("contributionList");
 
@@ -100,8 +145,13 @@ document.getElementById("statementMemberTotal").textContent =
 
     if (contributions.length === 0) {
 
-        list.textContent =
-            "No contribution records found.";
+        list.innerHTML = `
+            <tr>
+                <td colspan="4">
+                    No contribution records found.
+                </td>
+            </tr>
+        `;
 
         return;
     }
@@ -109,34 +159,44 @@ document.getElementById("statementMemberTotal").textContent =
 
     contributions.forEach(contribution => {
 
-    const row = document.createElement("tr");
+        const row =
+            document.createElement("tr");
 
-    row.innerHTML = `
-        <td>
-            ${contribution.contribution_month}
-        </td>
 
-        <td>
-            ₦${Number(
-                contribution.amount || 0
-            ).toLocaleString()}
-        </td>
+        row.innerHTML = `
 
-        <td>
-            ${contribution.payment_date || "N/A"}
-        </td>
+            <td>
+                ${contribution.contribution_month}
+            </td>
 
-        <td>
-            ${contribution.notes || "—"}
-        </td>
-    `;
+            <td>
+                ₦${Number(
+                    contribution.amount || 0
+                ).toLocaleString()}
+            </td>
 
-    list.appendChild(row);
-});
+            <td>
+                ${contribution.payment_date || "N/A"}
+            </td>
+
+            <td>
+                ${contribution.notes || "—"}
+            </td>
+
+        `;
+
+
+        list.appendChild(row);
+
+    });
+
 }
 
 
-// Logout
+// ==========================================
+// LOGOUT
+// ==========================================
+
 document
     .getElementById("logoutBtn")
     .addEventListener("click", async () => {
@@ -144,45 +204,83 @@ document
         await supabaseClient.auth.signOut();
 
         window.location.href = "index.html";
+
     });
+
+
+// ==========================================
+// MONTH FILTER
+// ==========================================
 
 document
     .getElementById("monthFilter")
     .addEventListener("change", function () {
 
-        const selectedMonth = this.value;
+        const selectedMonth =
+            this.value;
+
 
         const rows =
             document.querySelectorAll(
                 "#contributionList tr"
             );
 
+
         rows.forEach(row => {
 
-            const monthCell = row
-                .querySelector("td");
+            const monthCell =
+                row.querySelector("td");
 
-            if (!monthCell) return;
+
+            if (!monthCell) {
+                return;
+            }
+
 
             const contributionMonth =
                 monthCell.textContent.trim();
 
+
             if (
                 !selectedMonth ||
-                contributionMonth.startsWith(selectedMonth)
+                contributionMonth.startsWith(
+                    selectedMonth
+                )
             ) {
+
                 row.style.display = "";
+
             } else {
+
                 row.style.display = "none";
+
             }
+
         });
+
     });
+
+
+// ==========================================
+// PRINT CONTRIBUTION STATEMENT
+// ==========================================
+
 document
     .getElementById("printStatementBtn")
     .addEventListener("click", function () {
+
         window.print();
+
     });
+
+
+// ==========================================
+// LOAD MEMBER DASHBOARD
+// ==========================================
+
 loadMemberDashboard();
+
+
 // ==========================================
 // LOAD ASSOCIATION BALANCE
 // ==========================================
@@ -190,16 +288,23 @@ loadMemberDashboard();
 async function loadAssociationBalance() {
 
     const balanceElement =
-        document.getElementById("associationBalance");
+        document.getElementById(
+            "associationBalance"
+        );
+
 
     if (!balanceElement) {
         return;
     }
 
-    const { data, error } =
-        await supabaseClient.rpc(
-            "get_association_balance"
-        );
+
+    const {
+        data,
+        error
+    } = await supabaseClient.rpc(
+        "get_association_balance"
+    );
+
 
     if (error) {
 
@@ -214,17 +319,35 @@ async function loadAssociationBalance() {
         return;
     }
 
+
+    const balance =
+        Number(data || 0);
+
+
+    // Normal dashboard balance
     balanceElement.textContent =
-        Number(data || 0).toLocaleString();
+        balance.toLocaleString();
+
+
+    // Printable statement balance
     const statementBalanceElement =
-    document.getElementById("statementAssociationBalance");
+        document.getElementById(
+            "statementAssociationBalance"
+        );
 
-if (statementBalanceElement) {
-    statementBalanceElement.textContent =
-        Number(data || 0).toLocaleString();
+
+    if (statementBalanceElement) {
+
+        statementBalanceElement.textContent =
+            balance.toLocaleString();
+
+    }
+
 }
-}
 
 
-// Load association balance
+// ==========================================
+// LOAD ASSOCIATION BALANCE
+// ==========================================
+
 loadAssociationBalance();
