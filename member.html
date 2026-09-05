@@ -1,353 +1,189 @@
-// ==========================================
-// LOAD MEMBER DASHBOARD
-// ==========================================
+<!DOCTYPE html>
+<html lang="en">
 
-async function loadMemberDashboard() {
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    const {
-        data: { user },
-        error: authError
-    } = await supabaseClient.auth.getUser();
+    <title>Member Dashboard | Jaen Youth Brothers Association Hub</title>
 
+    <link rel="stylesheet" href="css/style.css">
+</head>
 
-    if (authError || !user) {
+<body>
 
-        window.location.href = "index.html";
+<div class="container">
 
-        return;
-    }
+    <div class="card">
 
+        <!-- ==========================================
+             NORMAL MEMBER DASHBOARD
+        =========================================== -->
 
-    // ==========================================
-    // FIND LOGGED-IN MEMBER
-    // ==========================================
+        <div class="dashboardOnly">
 
-    const {
-        data: member,
-        error: memberError
-    } = await supabaseClient
-        .from("members")
-        .select("id, member_id, full_name, role")
-        .eq("auth_user_id", user.id)
-        .single();
+            <h1>Jaen Youth Brothers Association Hub</h1>
 
+            <h2>Member Dashboard</h2>
 
-    if (
-        memberError ||
-        !member ||
-        member.role !== "member"
-    ) {
+            <p>
+                Welcome,
+                <strong id="memberName">Loading...</strong>
+            </p>
 
-        await supabaseClient.auth.signOut();
+            <p>
+                Member ID:
+                <strong id="memberId">Loading...</strong>
+            </p>
 
-        window.location.href = "index.html";
+            <hr>
 
-        return;
-    }
+            <div class="card">
+                <h2>Total Contribution</h2>
 
+                <h1>
+                    ₦<span id="memberTotal">0</span>
+                </h1>
+            </div>
 
-    // ==========================================
-    // DISPLAY MEMBER INFORMATION
-    // ==========================================
+            <div class="card">
+                <h2>Association Balance</h2>
 
-    document.getElementById("memberName").textContent =
-        member.full_name;
+                <h1>
+                    ₦<span id="associationBalance">0</span>
+                </h1>
+            </div>
 
-    document.getElementById("memberId").textContent =
-        member.member_id;
+            <hr>
 
+            <h2>My Contribution History</h2>
 
-    // ==========================================
-    // PRINTABLE STATEMENT MEMBER INFORMATION
-    // ==========================================
+            <label for="monthFilter">
+                Search by Month:
+            </label>
 
-    document.getElementById("statementMemberName").textContent =
-        member.full_name;
+            <input
+                type="month"
+                id="monthFilter"
+            >
 
-    document.getElementById("statementMemberId").textContent =
-        member.member_id;
+            <br><br>
 
-    document.getElementById("statementDate").textContent =
-        new Date().toLocaleDateString();
+        </div>
 
 
-    // ==========================================
-    // GET MEMBER CONTRIBUTIONS
-    // ==========================================
+        <!-- ==========================================
+             PRINTABLE STATEMENT
+        =========================================== -->
 
-    const {
-        data: contributions,
-        error: contributionError
-    } = await supabaseClient
-        .from("contributions")
-        .select(
-            "contribution_month, amount, payment_date, notes"
-        )
-        .eq("member_id", member.id)
-        .order("contribution_month", {
-            ascending: false
-        });
+        <div class="printStatementHeader">
 
+            <h1>JAEN YOUTH BROTHERS ASSOCIATION HUB</h1>
 
-    if (contributionError) {
+            <h2>MEMBER CONTRIBUTION STATEMENT</h2>
 
-        console.error(
-            "Contribution error:",
-            contributionError
-        );
+            <p>
+                Official record of member contributions
+            </p>
 
-        document.getElementById(
-            "contributionList"
-        ).innerHTML = `
-            <tr>
-                <td colspan="4">
-                    Unable to load contributions.
-                </td>
-            </tr>
-        `;
+            <div class="statementMemberDetails">
 
-        return;
-    }
+                <p>
+                    <strong>Member Name:</strong>
+                    <span id="statementMemberName">—</span>
+                </p>
 
+                <p>
+                    <strong>Member ID:</strong>
+                    <span id="statementMemberId">—</span>
+                </p>
 
-    // ==========================================
-    // CALCULATE TOTAL CONTRIBUTION
-    // ==========================================
+                <p>
+                    <strong>Statement Date:</strong>
+                    <span id="statementDate">—</span>
+                </p>
 
-    const total = contributions.reduce(
-        (sum, contribution) =>
-            sum + Number(contribution.amount || 0),
-        0
-    );
+            </div>
 
+            <div class="statementFinancialSummary">
 
-    // Normal dashboard total
-    document.getElementById("memberTotal").textContent =
-        total.toLocaleString();
+                <p>
+                    <strong>Total Contribution:</strong>
+                    ₦<span id="statementMemberTotal">0</span>
+                </p>
 
+                <p>
+                    <strong>Association Balance:</strong>
+                    ₦<span id="statementAssociationBalance">0</span>
+                </p>
 
-    // Printable statement total
-    document.getElementById(
-        "statementMemberTotal"
-    ).textContent =
-        total.toLocaleString();
+            </div>
 
+        </div>
 
-    // ==========================================
-    // DISPLAY CONTRIBUTION HISTORY
-    // ==========================================
 
-    const list =
-        document.getElementById("contributionList");
+        <!-- ==========================================
+             CONTRIBUTION HISTORY TABLE
+        =========================================== -->
 
-    list.innerHTML = "";
+        <div class="table-container">
 
+            <table>
 
-    if (contributions.length === 0) {
+                <thead>
+                    <tr>
+                        <th>Contribution Month</th>
+                        <th>Amount</th>
+                        <th>Payment Date</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
 
-        list.innerHTML = `
-            <tr>
-                <td colspan="4">
-                    No contribution records found.
-                </td>
-            </tr>
-        `;
+                <tbody id="contributionList">
 
-        return;
-    }
+                    <tr>
+                        <td colspan="4">
+                            Loading contributions...
+                        </td>
+                    </tr>
 
+                </tbody>
 
-    contributions.forEach(contribution => {
+            </table>
 
-        const row =
-            document.createElement("tr");
+        </div>
 
 
-        row.innerHTML = `
+        <!-- ==========================================
+             DASHBOARD BUTTONS
+        =========================================== -->
 
-            <td>
-                ${contribution.contribution_month}
-            </td>
+        <div class="dashboardOnly">
 
-            <td>
-                ₦${Number(
-                    contribution.amount || 0
-                ).toLocaleString()}
-            </td>
+            <hr>
 
-            <td>
-                ${contribution.payment_date || "N/A"}
-            </td>
+            <button id="printStatementBtn">
+                🧾 Print Contribution Statement
+            </button>
 
-            <td>
-                ${contribution.notes || "—"}
-            </td>
+            <br><br>
 
-        `;
+            <button id="logoutBtn">
+                Logout
+            </button>
 
+        </div>
 
-        list.appendChild(row);
+    </div>
 
-    });
+</div>
 
-}
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-// ==========================================
-// LOGOUT
-// ==========================================
+<script src="js/supabase.js"></script>
 
-document
-    .getElementById("logoutBtn")
-    .addEventListener("click", async () => {
+<script src="js/member.js?v=3"></script>
 
-        await supabaseClient.auth.signOut();
-
-        window.location.href = "index.html";
-
-    });
-
-
-// ==========================================
-// MONTH FILTER
-// ==========================================
-
-document
-    .getElementById("monthFilter")
-    .addEventListener("change", function () {
-
-        const selectedMonth =
-            this.value;
-
-
-        const rows =
-            document.querySelectorAll(
-                "#contributionList tr"
-            );
-
-
-        rows.forEach(row => {
-
-            const monthCell =
-                row.querySelector("td");
-
-
-            if (!monthCell) {
-                return;
-            }
-
-
-            const contributionMonth =
-                monthCell.textContent.trim();
-
-
-            if (
-                !selectedMonth ||
-                contributionMonth.startsWith(
-                    selectedMonth
-                )
-            ) {
-
-                row.style.display = "";
-
-            } else {
-
-                row.style.display = "none";
-
-            }
-
-        });
-
-    });
-
-
-// ==========================================
-// PRINT CONTRIBUTION STATEMENT
-// ==========================================
-
-document
-    .getElementById("printStatementBtn")
-    .addEventListener("click", function () {
-
-        window.print();
-
-    });
-
-
-// ==========================================
-// LOAD MEMBER DASHBOARD
-// ==========================================
-
-loadMemberDashboard();
-
-
-// ==========================================
-// LOAD ASSOCIATION BALANCE
-// ==========================================
-
-async function loadAssociationBalance() {
-
-    const balanceElement =
-        document.getElementById(
-            "associationBalance"
-        );
-
-
-    if (!balanceElement) {
-        return;
-    }
-
-
-    const {
-        data,
-        error
-    } = await supabaseClient.rpc(
-        "get_association_balance"
-    );
-
-
-    if (error) {
-
-        console.error(
-            "Error loading association balance:",
-            error
-        );
-
-        balanceElement.textContent =
-            "Unable to load";
-
-        return;
-    }
-
-
-    const balance =
-        Number(data || 0);
-
-
-    // Normal dashboard balance
-    balanceElement.textContent =
-        balance.toLocaleString();
-
-
-    // Printable statement balance
-    const statementBalanceElement =
-        document.getElementById(
-            "statementAssociationBalance"
-        );
-
-
-    if (statementBalanceElement) {
-
-        statementBalanceElement.textContent =
-            balance.toLocaleString();
-
-    }
-
-}
-
-
-// ==========================================
-// LOAD ASSOCIATION BALANCE
-// ==========================================
-
-loadAssociationBalance();
+</body>
+</html>
