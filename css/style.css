@@ -303,3 +303,38 @@ select {
     background: #222;
     color: white;
 }
+/* ==========================================
+   ADMIN OVERVIEW CARDS
+========================================== */
+
+.overview-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.overview-card {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.overview-card h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 17px;
+}
+
+.overview-card strong {
+    font-size: 26px;
+}
+
+/* Mobile phones */
+@media (max-width: 600px) {
+    .overview-cards {
+        grid-template-columns: 1fr;
+    }
+}
