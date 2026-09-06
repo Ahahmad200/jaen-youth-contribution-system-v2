@@ -1645,3 +1645,32 @@ if (editFinanceForm) {
     });
 
 }
+// ==========================================
+// MEMBER SEARCH
+// ==========================================
+
+document
+    .getElementById("memberSearch")
+    ?.addEventListener("input", function () {
+
+        const searchText =
+            this.value.toLowerCase().trim();
+
+        const rows =
+            document.querySelectorAll(
+                "#adminMemberList tr"
+            );
+
+        rows.forEach((row) => {
+
+            const rowText =
+                row.textContent.toLowerCase();
+
+            if (rowText.includes(searchText)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+
+        });
+    });
