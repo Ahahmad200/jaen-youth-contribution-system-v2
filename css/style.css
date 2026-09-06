@@ -338,3 +338,26 @@ select {
         grid-template-columns: 1fr;
     }
 }
+/* ==========================================
+   RESPONSIVE TABLES
+========================================== */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-container table {
+    min-width: 700px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container th,
+.table-container td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap;
+}
