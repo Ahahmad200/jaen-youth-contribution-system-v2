@@ -1150,6 +1150,7 @@ loadMembers();
 loadAdminDashboard();
 loadContributionRecords();
 loadMemberManagement();
+filterMembers();
 // ==========================================
 // ASSOCIATION FINANCE
 // ==========================================
@@ -1644,33 +1645,48 @@ if (editFinanceForm) {
         loadAssociationBalance();
     });
 
-}
-// ==========================================
+}// ==========================================
 // MEMBER SEARCH
 // ==========================================
 
+function filterMembers() {
+
+    const searchInput =
+        document.getElementById("memberSearch");
+
+    if (!searchInput) {
+        return;
+    }
+
+    const searchText =
+        searchInput.value.toLowerCase().trim();
+
+    const rows =
+        document.querySelectorAll(
+            "#adminMemberList tr"
+        );
+
+    rows.forEach((row) => {
+
+        const rowText =
+            row.textContent.toLowerCase();
+
+        if (
+            !searchText ||
+            rowText.includes(searchText)
+        ) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+
+    });
+}
+
+
 document
     .getElementById("memberSearch")
-    ?.addEventListener("input", function () {
-
-        const searchText =
-            this.value.toLowerCase().trim();
-
-        const rows =
-            document.querySelectorAll(
-                "#adminMemberList tr"
-            );
-
-        rows.forEach((row) => {
-
-            const rowText =
-                row.textContent.toLowerCase();
-
-            if (rowText.includes(searchText)) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
-            }
-
-        });
-    });
+    ?.addEventListener(
+        "input",
+        filterMembers
+    );
