@@ -1708,7 +1708,7 @@ function filterContributions() {
 
     const rows =
         document.querySelectorAll(
-            "#contributionRecords tr"
+            "#adminContributionList tr"
         );
 
     rows.forEach((row) => {
