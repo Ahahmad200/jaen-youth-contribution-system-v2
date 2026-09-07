@@ -1690,3 +1690,48 @@ document
         "input",
         filterMembers
     );
+// ==========================================
+// CONTRIBUTION SEARCH
+// ==========================================
+
+function filterContributions() {
+
+    const searchInput =
+        document.getElementById("contributionSearch");
+
+    if (!searchInput) {
+        return;
+    }
+
+    const searchText =
+        searchInput.value.toLowerCase().trim();
+
+    const rows =
+        document.querySelectorAll(
+            "#contributionRecords tr"
+        );
+
+    rows.forEach((row) => {
+
+        const rowText =
+            row.textContent.toLowerCase();
+
+        if (
+            !searchText ||
+            rowText.includes(searchText)
+        ) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+
+    });
+}
+
+
+document
+    .getElementById("contributionSearch")
+    ?.addEventListener(
+        "input",
+        filterContributions
+    );
