@@ -2017,3 +2017,43 @@ loadMemberManagement();
 loadReports();
 loadMemberContributionReport();
 loadMonthlyContributionReport();
+// ==========================================
+// REPORT PERIOD FILTER
+// ==========================================
+
+document
+    .getElementById("generateReportBtn")
+    ?.addEventListener("click", async function () {
+
+        const startDate =
+            document.getElementById(
+                "reportStartDate"
+            ).value;
+
+        const endDate =
+            document.getElementById(
+                "reportEndDate"
+            ).value;
+
+        if (!startDate || !endDate) {
+            alert(
+                "Please select both From and To dates."
+            );
+            return;
+        }
+
+        if (startDate > endDate) {
+            alert(
+                "The From date cannot be later than the To date."
+            );
+            return;
+        }
+
+        console.log(
+            "Report period:",
+            startDate,
+            "to",
+            endDate
+        );
+
+    });
