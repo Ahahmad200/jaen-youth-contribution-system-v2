@@ -1842,8 +1842,98 @@ async function loadReports() {
         "₦" + Number(balance || 0).toLocaleString();
 
 }
+// ==========================================
+// MEMBER CONTRIBUTION REPORT
+// ==========================================
+
+async function loadMemberContributionReport() {
+
+    const reportList =
+        document.getElementById(
+            "memberContributionReport"
+        );
+
+    if (!reportList) {
+        return;
+    }
+
+    // Get all members
+    const { data: members, error: memberError } =
+        await supabaseClient
+            .from("members")
+            .select("id, member_id, full_name")
+            .eq("role", "member")
+            .order("full_name");
+
+    if (memberError) {
+        console.error(
+            "Error loading members for report:",
+            memberError
+        );
+        return;
+    }
+
+    // Get all contributions
+    const { data: contributions, error: contributionError } =
+        await supabaseClient
+            .from("contributions")
+            .select("member_id, amount");
+
+    if (contributionError) {
+        console.error(
+            "Error loading contributions for report:",
+            contributionError
+        );
+        return;
+    }
+
+    // Calculate total for each member
+    const memberTotals = {};
+
+    contributions.forEach((contribution) => {
+
+        const memberId =
+            contribution.member_id;
+
+        if (!memberTotals[memberId]) {
+            memberTotals[memberId] = 0;
+        }
+
+        memberTotals[memberId] +=
+            Number(contribution.amount || 0);
+
+    });
+
+    // Clear existing rows
+    reportList.innerHTML = "";
+
+    // Display members
+    members.forEach((member) => {
+
+        const total =
+            memberTotals[member.id] || 0;
+
+        const row =
+            document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${member.full_name || "N/A"}</td>
+
+            <td>${member.member_id || "N/A"}</td>
+
+            <td>
+                ₦${total.toLocaleString()}
+            </td>
+        `;
+
+        reportList.appendChild(row);
+
+    });
+
+}
 loadMembers();
 loadAdminDashboard();
 loadContributionRecords();
 loadMemberManagement();
 loadReports();
+loadMemberContributionReport();
