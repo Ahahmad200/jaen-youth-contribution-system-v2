@@ -1931,9 +1931,89 @@ async function loadMemberContributionReport() {
     });
 
 }
+// ==========================================
+// MONTHLY CONTRIBUTION REPORT
+// ==========================================
+
+async function loadMonthlyContributionReport() {
+
+    const reportList =
+        document.getElementById(
+            "monthlyContributionReport"
+        );
+
+    if (!reportList) {
+        return;
+    }
+
+    const { data: contributions, error } =
+        await supabaseClient
+            .from("contributions")
+            .select("contribution_month, amount")
+            .order("contribution_month", {
+                ascending: true
+            });
+
+    if (error) {
+        console.error(
+            "Error loading monthly contribution report:",
+            error
+        );
+        return;
+    }
+
+    const monthlyTotals = {};
+
+    contributions.forEach((contribution) => {
+
+        const month =
+            contribution.contribution_month;
+
+        if (!monthlyTotals[month]) {
+            monthlyTotals[month] = 0;
+        }
+
+        monthlyTotals[month] +=
+            Number(contribution.amount || 0);
+
+    });
+
+    reportList.innerHTML = "";
+
+    Object.keys(monthlyTotals).forEach((month) => {
+
+        const date =
+            new Date(month + "T00:00:00");
+
+        const monthName =
+            date.toLocaleDateString(
+                "en-US",
+                {
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+
+        const row =
+            document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${monthName}</td>
+
+            <td>
+                ₦${monthlyTotals[month].toLocaleString()}
+            </td>
+        `;
+
+        reportList.appendChild(row);
+
+    });
+
+}
 loadMembers();
 loadAdminDashboard();
 loadContributionRecords();
 loadMemberManagement();
 loadReports();
 loadMemberContributionReport();
+loadMonthlyContributionReport();
