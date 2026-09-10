@@ -1735,3 +1735,115 @@ document
         "input",
         filterContributions
     );
+// ==========================================
+// REPORTS & STATISTICS
+// ==========================================
+
+async function loadReports() {
+
+    // Get total contributions
+    const { data: contributions, error: contributionError } =
+        await supabaseClient
+            .from("contributions")
+            .select("amount");
+
+    if (contributionError) {
+        console.error(
+            "Error loading contribution report:",
+            contributionError
+        );
+        return;
+    }
+
+    let totalContributions = 0;
+
+    contributions.forEach((contribution) => {
+        totalContributions += Number(
+            contribution.amount || 0
+        );
+    });
+
+
+    // Get financial transactions
+    const { data: transactions, error: financeError } =
+        await supabaseClient
+            .from("financial_transactions")
+            .select("transaction_type, amount");
+
+    if (financeError) {
+        console.error(
+            "Error loading financial report:",
+            financeError
+        );
+        return;
+    }
+
+    let totalIncome = 0;
+    let totalExpenses = 0;
+
+    transactions.forEach((transaction) => {
+
+        const amount =
+            Number(transaction.amount || 0);
+
+        if (
+            transaction.transaction_type === "income"
+        ) {
+            totalIncome += amount;
+        }
+
+        if (
+            transaction.transaction_type === "expense"
+        ) {
+            totalExpenses += amount;
+        }
+
+    });
+
+
+    // Get current association balance
+    const { data: balance, error: balanceError } =
+        await supabaseClient.rpc(
+            "get_association_balance"
+        );
+
+    if (balanceError) {
+        console.error(
+            "Error loading association balance:",
+            balanceError
+        );
+        return;
+    }
+
+
+    // Display report figures
+
+    document.getElementById(
+        "reportTotalContributions"
+    ).textContent =
+        "₦" + totalContributions.toLocaleString();
+
+
+    document.getElementById(
+        "reportTotalIncome"
+    ).textContent =
+        "₦" + totalIncome.toLocaleString();
+
+
+    document.getElementById(
+        "reportTotalExpenses"
+    ).textContent =
+        "₦" + totalExpenses.toLocaleString();
+
+
+    document.getElementById(
+        "reportAssociationBalance"
+    ).textContent =
+        "₦" + Number(balance || 0).toLocaleString();
+
+}
+loadMembers();
+loadAdminDashboard();
+loadContributionRecords();
+loadMemberManagement();
+loadReports();
