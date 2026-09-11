@@ -1818,19 +1818,63 @@ async function loadReports() {
 
 
     // Get current association balance
-    const { data: balance, error: balanceError } =
-        await supabaseClient.rpc(
-            "get_association_balance"
+    // Calculate association balance at the end of the report period
+
+let reportBalance = 0;
+
+// Add contributions up to the selected To date
+const { data: allContributions, error: allContributionsError } =
+    await supabaseClient
+        .from("contributions")
+        .select("amount, contribution_month")
+        .lte(
+            "contribution_month",
+            reportEndDate || "2999-12-31"
         );
 
-    if (balanceError) {
-        console.error(
-            "Error loading association balance:",
-            balanceError
+if (allContributionsError) {
+    console.error(
+        "Error loading historical contributions:",
+        allContributionsError
+    );
+    return;
+}
+
+allContributions.forEach((contribution) => {
+    reportBalance += Number(contribution.amount || 0);
+});
+
+// Add income and subtract expenses up to the selected To date
+const { data: allTransactions, error: allTransactionsError } =
+    await supabaseClient
+        .from("financial_transactions")
+        .select("transaction_type, amount, transaction_date")
+        .lte(
+            "transaction_date",
+            reportEndDate || "2999-12-31"
         );
-        return;
+
+if (allTransactionsError) {
+    console.error(
+        "Error loading historical transactions:",
+        allTransactionsError
+    );
+    return;
+}
+
+allTransactions.forEach((transaction) => {
+
+    const amount = Number(transaction.amount || 0);
+
+    if (transaction.transaction_type === "income") {
+        reportBalance += amount;
     }
 
+    if (transaction.transaction_type === "expense") {
+        reportBalance -= amount;
+    }
+
+});
 
     // Display report figures
 
