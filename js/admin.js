@@ -1744,9 +1744,17 @@ async function loadReports() {
 
     // Get total contributions
     const { data: contributions, error: contributionError } =
-        await supabaseClient
-            .from("contributions")
-            .select("amount");
+    await supabaseClient
+        .from("contributions")
+        .select("amount, contribution_month")
+        .gte(
+            "contribution_month",
+            reportStartDate || "1900-01-01"
+        )
+        .lte(
+            "contribution_month",
+            reportEndDate || "2999-12-31"
+        );
 
     if (contributionError) {
         console.error(
