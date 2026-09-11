@@ -2049,11 +2049,11 @@ document
             return;
         }
 
-        console.log(
-            "Report period:",
-            startDate,
-            "to",
-            endDate
-        );
+        alert(
+    "Report generated from " +
+    startDate +
+    " to " +
+    endDate
+);
 
     });
