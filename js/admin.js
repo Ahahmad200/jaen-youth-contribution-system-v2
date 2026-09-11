@@ -1738,7 +1738,8 @@ document
 // ==========================================
 // REPORTS & STATISTICS
 // ==========================================
-
+let reportStartDate = null;
+let reportEndDate = null;
 async function loadReports() {
 
     // Get total contributions
