@@ -1775,10 +1775,17 @@ async function loadReports() {
 
     // Get financial transactions
     const { data: transactions, error: financeError } =
-        await supabaseClient
-            .from("financial_transactions")
-            .select("transaction_type, amount");
-
+    await supabaseClient
+        .from("financial_transactions")
+        .select("transaction_type, amount, transaction_date")
+        .gte(
+            "transaction_date",
+            reportStartDate || "1900-01-01"
+        )
+        .lte(
+            "transaction_date",
+            reportEndDate || "2999-12-31"
+        );
     if (financeError) {
         console.error(
             "Error loading financial report:",
