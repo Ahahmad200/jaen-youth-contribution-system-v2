@@ -2035,7 +2035,8 @@ document
             document.getElementById(
                 "reportEndDate"
             ).value;
-
+reportStartDate = startDate;
+reportEndDate = endDate;
         if (!startDate || !endDate) {
             alert(
                 "Please select both From and To dates."
