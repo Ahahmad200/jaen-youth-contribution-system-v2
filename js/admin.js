@@ -1896,10 +1896,10 @@ allTransactions.forEach((transaction) => {
         "₦" + totalExpenses.toLocaleString();
 
 
-    document.getElementById(
-        "reportAssociationBalance"
-    ).textContent =
-        "₦" + Number(balance || 0).toLocaleString();
+document.getElementById(
+    "reportAssociationBalance"
+).textContent =
+    "₦" + reportBalance.toLocaleString();
 
 }
 // ==========================================
