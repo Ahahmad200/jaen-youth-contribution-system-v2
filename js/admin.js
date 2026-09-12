@@ -2224,5 +2224,8 @@ reportEndDate = endDate;
     " to " +
     endDate
 );
-
+loadReports();
+loadMemberContributionReport();
+loadMonthlyContributionReport();
+loadFinancialCategoryReport();
     });
