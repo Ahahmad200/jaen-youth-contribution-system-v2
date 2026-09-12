@@ -1992,6 +1992,113 @@ async function loadMemberContributionReport() {
 
 }
 // ==========================================
+// FINANCIAL SUMMARY BY CATEGORY
+// ==========================================
+
+async function loadFinancialCategoryReport() {
+
+    const reportList =
+        document.getElementById("financialCategoryReport");
+
+    if (!reportList) {
+        return;
+    }
+
+    const { data: transactions, error } =
+        await supabaseClient
+            .from("financial_transactions")
+            .select(
+                "transaction_type, amount, category, transaction_date"
+            )
+            .gte(
+                "transaction_date",
+                reportStartDate || "1900-01-01"
+            )
+            .lte(
+                "transaction_date",
+                reportEndDate || "2999-12-31"
+            );
+
+    if (error) {
+
+        console.error(
+            "Error loading financial category report:",
+            error
+        );
+
+        return;
+    }
+
+    const categoryTotals = {};
+
+    transactions.forEach((transaction) => {
+
+        const category =
+            transaction.category || "Uncategorized";
+
+        if (!categoryTotals[category]) {
+
+            categoryTotals[category] = {
+                income: 0,
+                expenses: 0
+            };
+        }
+
+        const amount =
+            Number(transaction.amount || 0);
+
+        if (
+            transaction.transaction_type === "income"
+        ) {
+            categoryTotals[category].income += amount;
+        }
+
+        if (
+            transaction.transaction_type === "expense"
+        ) {
+            categoryTotals[category].expenses += amount;
+        }
+
+    });
+
+    reportList.innerHTML = "";
+
+    Object.keys(categoryTotals).forEach((category) => {
+
+        const income =
+            categoryTotals[category].income;
+
+        const expenses =
+            categoryTotals[category].expenses;
+
+        const net =
+            income - expenses;
+
+        const row =
+            document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${category}</td>
+
+            <td>
+                ₦${income.toLocaleString()}
+            </td>
+
+            <td>
+                ₦${expenses.toLocaleString()}
+            </td>
+
+            <td>
+                ₦${net.toLocaleString()}
+            </td>
+        `;
+
+        reportList.appendChild(row);
+
+    });
+
+}
+// ==========================================
 // MONTHLY CONTRIBUTION REPORT
 // ==========================================
 
@@ -2077,6 +2184,7 @@ loadMemberManagement();
 loadReports();
 loadMemberContributionReport();
 loadMonthlyContributionReport();
+loadFinancialCategoryReport();
 // ==========================================
 // REPORT PERIOD FILTER
 // ==========================================
