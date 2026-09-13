@@ -8,19 +8,104 @@
     <title>Jaen Youth Brothers Association Hub</title>
 
     <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* ==========================================
+           JYBA HOMEPAGE HEADER
+           ========================================== */
+
+        .jyba-header {
+            text-align: center;
+            padding: 25px 15px 20px;
+        }
+
+        .jyba-logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            border-radius: 50%;
+            display: block;
+            margin: 0 auto 15px;
+        }
+
+        .jyba-name {
+            margin: 0;
+            font-size: 28px;
+            line-height: 1.25;
+            font-weight: 700;
+        }
+
+        .jyba-motto {
+            margin: 10px 0 0;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .jyba-description {
+            margin: 8px 0 0;
+            font-size: 15px;
+        }
+
+        /* Mobile phone adjustment */
+        @media (max-width: 600px) {
+
+            .jyba-logo {
+                width: 125px;
+                height: 125px;
+            }
+
+            .jyba-name {
+                font-size: 23px;
+            }
+
+            .jyba-motto {
+                font-size: 13px;
+            }
+
+            .jyba-description {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="container">
 
+    <!-- ==========================================
+         JYBA ASSOCIATION HEADER
+         ========================================== -->
+
+    <div class="card jyba-header">
+
+        <img
+            src="jyba-logo.png"
+            alt="Jaen Youth Brothers Association Logo"
+            class="jyba-logo"
+        >
+
+        <h1 class="jyba-name">
+            Jaen Youth Brothers Association
+        </h1>
+
+        <p class="jyba-motto">
+            UNITE. INSPIRE. THRIVE. AS ONE.
+        </p>
+
+        <p class="jyba-description">
+            Association Hub & Monthly Contribution Management System
+        </p>
+
+    </div>
+
+
+    <!-- ==========================================
+         LOGIN SELECTION
+         ========================================== -->
+
     <div class="card">
-
-        <h1>Jaen Youth Brothers Association Hub</h1>
-
-        <p>Monthly Contribution Management System</p>
-
-        <hr>
 
         <h2>Login</h2>
 
@@ -36,6 +121,10 @@
 
     </div>
 
+
+    <!-- ==========================================
+         LOGIN FORM
+         ========================================== -->
 
     <div class="card" id="loginSection" style="display:none;">
 
