@@ -100,6 +100,7 @@
 
     </div>
 
+
 <!-- ==========================================
      JYBA LEADERSHIP SECTION
      ========================================== -->
@@ -115,9 +116,17 @@
     <div class="leaders-grid">
 
         <!-- Leader 1 -->
-        <div class="leader-photo" onclick="openLeaderPhoto('leaders/leader1.jpg')">
-    <img src="leaders/leader1.jpg" alt="Leader 1">
-</div>
+        <div class="leader-card">
+
+            <div
+                class="leader-photo"
+                onclick="openLeaderPhoto('leaders/leader1.jpg')"
+            >
+                <img
+                    src="leaders/leader1.jpg"
+                    alt="Leader 1"
+                >
+            </div>
 
             <h3>Leader 1</h3>
 
@@ -125,7 +134,10 @@
                 Position to be assigned
             </p>
 
-            <button type="button" onclick="openBiography('leader1')">
+            <button
+                type="button"
+                onclick="openBiography('leader1')"
+            >
                 View Biography
             </button>
 
@@ -145,7 +157,10 @@
                 Position to be assigned
             </p>
 
-            <button type="button" onclick="openBiography('leader2')">
+            <button
+                type="button"
+                onclick="openBiography('leader2')"
+            >
                 View Biography
             </button>
 
@@ -165,7 +180,10 @@
                 Position to be assigned
             </p>
 
-            <button type="button" onclick="openBiography('leader3')">
+            <button
+                type="button"
+                onclick="openBiography('leader3')"
+            >
                 View Biography
             </button>
 
@@ -185,7 +203,10 @@
                 Position to be assigned
             </p>
 
-            <button type="button" onclick="openBiography('leader4')">
+            <button
+                type="button"
+                onclick="openBiography('leader4')"
+            >
                 View Biography
             </button>
 
@@ -205,7 +226,10 @@
                 Position to be assigned
             </p>
 
-            <button type="button" onclick="openBiography('leader5')">
+            <button
+                type="button"
+                onclick="openBiography('leader5')"
+            >
                 View Biography
             </button>
 
@@ -225,7 +249,10 @@
                 Position to be assigned
             </p>
 
-            <button type="button" onclick="openBiography('leader6')">
+            <button
+                type="button"
+                onclick="openBiography('leader6')"
+            >
                 View Biography
             </button>
 
@@ -237,10 +264,43 @@
 
 
 <!-- ==========================================
+     LEADER PHOTO POPUP
+     ========================================== -->
+
+<div
+    id="leaderPhotoModal"
+    class="leader-photo-modal"
+>
+
+    <div class="leader-photo-popup">
+
+        <button
+            type="button"
+            class="close-leader-photo"
+            onclick="closeLeaderPhoto()"
+        >
+            ×
+        </button>
+
+        <img
+            id="expandedLeaderPhoto"
+            src=""
+            alt="Leader photograph"
+        >
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
      BIOGRAPHY POPUP
      ========================================== -->
 
-<div id="biographyModal" class="biography-modal">
+<div
+    id="biographyModal"
+    class="biography-modal"
+>
 
     <div class="biography-box">
 
@@ -308,6 +368,14 @@
     justify-content: center;
     font-size: 55px;
     overflow: hidden;
+    cursor: pointer;
+}
+
+.leader-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .leader-card h3 {
@@ -323,31 +391,58 @@
 .leader-card button {
     width: 100%;
 }
-<!-- ==========================================
-     LEADER PHOTO POPUP
-     ========================================== -->
 
-<div id="leaderPhotoModal" class="leader-photo-modal">
 
-    <div class="leader-photo-popup">
+/* ==========================================
+   LEADER PHOTO POPUP
+   ========================================== */
 
-        <button
-            type="button"
-            class="close-leader-photo"
-            onclick="closeLeaderPhoto()"
-        >
-            ×
-        </button>
+.leader-photo-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
 
-        <img
-            id="expandedLeaderPhoto"
-            src=""
-            alt="Leader photograph"
-        >
+.leader-photo-popup {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
 
-    </div>
+#expandedLeaderPhoto {
+    display: block;
+    max-width: 90vw;
+    max-height: 85vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+}
 
-</div>
+.close-leader-photo {
+    position: absolute;
+    right: -10px;
+    top: -45px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 28px;
+    line-height: 35px;
+    cursor: pointer;
+}
+
+
 /* ==========================================
    BIOGRAPHY POPUP
    ========================================== */
@@ -416,65 +511,7 @@
     }
 
 }
-/* ==========================================
-   EXPANDED LEADER PHOTO
-   ========================================== */
 
-.leader-photo {
-    cursor: pointer;
-}
-
-.leader-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.leader-photo-modal {
-    display: none;
-    position: fixed;
-    z-index: 10000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.leader-photo-popup {
-    position: relative;
-    max-width: 90%;
-    max-height: 90%;
-}
-
-#expandedLeaderPhoto {
-    display: block;
-    max-width: 90vw;
-    max-height: 85vh;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    border-radius: 12px;
-}
-
-.close-leader-photo {
-    position: absolute;
-    right: -10px;
-    top: -45px;
-    background: white;
-    border: none;
-    border-radius: 50%;
-    width: 38px;
-    height: 38px;
-    font-size: 28px;
-    line-height: 35px;
-    cursor: pointer;
-    }
 </style>
 
 
@@ -586,21 +623,6 @@ function closeBiography() {
 }
 
 
-/* Close popup when clicking outside the box */
-
-window.addEventListener("click", function(event) {
-
-    const modal =
-        document.getElementById("biographyModal");
-
-    if (event.target === modal) {
-
-        closeBiography();
-
-    }
-
-});
-    
 /* ==========================================
    EXPAND LEADER PHOTO
    ========================================== */
@@ -625,21 +647,36 @@ function closeLeaderPhoto() {
 }
 
 
-/* Close photo when clicking outside */
+/* ==========================================
+   CLOSE POPUPS WHEN CLICKING OUTSIDE
+   ========================================== */
 
 window.addEventListener("click", function(event) {
 
-    const modal =
+    const biographyModal =
+        document.getElementById("biographyModal");
+
+    const photoModal =
         document.getElementById("leaderPhotoModal");
 
-    if (event.target === modal) {
+
+    if (event.target === biographyModal) {
+
+        closeBiography();
+
+    }
+
+
+    if (event.target === photoModal) {
 
         closeLeaderPhoto();
 
     }
 
 });
+
 </script>
+
     <!-- ==========================================
          LOGIN SELECTION
          ========================================== -->
