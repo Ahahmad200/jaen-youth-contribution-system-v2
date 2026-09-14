@@ -115,9 +115,7 @@
     <div class="leaders-grid">
 
         <!-- Leader 1 -->
-        <div class="leader-card">
-
-            <div class="leader-photo">
+        <div class="leader-photo" onclick="openLeaderPhoto('leaders/leader1.jpg')">
     <img src="leaders/leader1.jpg" alt="Leader 1">
 </div>
 
@@ -325,7 +323,31 @@
 .leader-card button {
     width: 100%;
 }
+<!-- ==========================================
+     LEADER PHOTO POPUP
+     ========================================== -->
 
+<div id="leaderPhotoModal" class="leader-photo-modal">
+
+    <div class="leader-photo-popup">
+
+        <button
+            type="button"
+            class="close-leader-photo"
+            onclick="closeLeaderPhoto()"
+        >
+            ×
+        </button>
+
+        <img
+            id="expandedLeaderPhoto"
+            src=""
+            alt="Leader photograph"
+        >
+
+    </div>
+
+</div>
 /* ==========================================
    BIOGRAPHY POPUP
    ========================================== */
@@ -394,7 +416,65 @@
     }
 
 }
+/* ==========================================
+   EXPANDED LEADER PHOTO
+   ========================================== */
 
+.leader-photo {
+    cursor: pointer;
+}
+
+.leader-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.leader-photo-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.leader-photo-popup {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+#expandedLeaderPhoto {
+    display: block;
+    max-width: 90vw;
+    max-height: 85vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+.close-leader-photo {
+    position: absolute;
+    right: -10px;
+    top: -45px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 28px;
+    line-height: 35px;
+    cursor: pointer;
+    }
 </style>
 
 
@@ -520,7 +600,45 @@ window.addEventListener("click", function(event) {
     }
 
 });
+    
+/* ==========================================
+   EXPAND LEADER PHOTO
+   ========================================== */
 
+function openLeaderPhoto(photoUrl) {
+
+    document.getElementById("expandedLeaderPhoto").src =
+        photoUrl;
+
+    document.getElementById("leaderPhotoModal").style.display =
+        "flex";
+}
+
+
+function closeLeaderPhoto() {
+
+    document.getElementById("leaderPhotoModal").style.display =
+        "none";
+
+    document.getElementById("expandedLeaderPhoto").src =
+        "";
+}
+
+
+/* Close photo when clicking outside */
+
+window.addEventListener("click", function(event) {
+
+    const modal =
+        document.getElementById("leaderPhotoModal");
+
+    if (event.target === modal) {
+
+        closeLeaderPhoto();
+
+    }
+
+});
 </script>
     <!-- ==========================================
          LOGIN SELECTION
