@@ -361,3 +361,80 @@ select {
     text-align: left;
     white-space: nowrap;
 }
+/* ==========================================
+   JYBA OUR MISSION
+   ========================================== */
+
+.jyba-mission {
+    margin-top: 20px;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.jyba-mission h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #1f4e79;
+    font-size: 26px;
+}
+
+.jyba-mission > p {
+    max-width: 750px;
+    margin: 0 auto 25px;
+    color: #555;
+    line-height: 1.7;
+}
+
+.mission-items {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.mission-item {
+    padding: 20px 15px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.mission-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+.mission-icon {
+    font-size: 34px;
+    margin-bottom: 10px;
+}
+
+.mission-item h3 {
+    margin: 0 0 8px;
+    color: #1f4e79;
+    font-size: 17px;
+}
+
+.mission-item p {
+    margin: 0;
+    color: #666;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+/* Mobile */
+@media (max-width: 800px) {
+
+    .mission-items {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 500px) {
+
+    .mission-items {
+        grid-template-columns: 1fr;
+    }
+
+}
