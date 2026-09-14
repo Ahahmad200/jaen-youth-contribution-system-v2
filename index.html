@@ -995,8 +995,46 @@ window.addEventListener("click", function(event) {
         Meet the members of the Jaen Youth Brothers Association Hub.
     </p>
 
-    <div class="members-grid" id="publicMembersList">
-    <p>Loading members...</p>
+    <div class="members-summary">
+
+    <div class="members-count-box">
+        <strong id="publicMemberCount">0</strong>
+        <span>Total Members</span>
+    </div>
+
+    <button type="button" id="viewAllMembersBtn" class="view-members-btn">
+        👥 View All Members
+    </button>
+
+</div>
+
+<div id="membersDirectoryModal" class="members-modal">
+
+    <div class="members-modal-content">
+
+        <button type="button" id="closeMembersModal" class="members-modal-close">
+            ✕
+        </button>
+
+        <h2>👥 JYBA Members Directory</h2>
+
+        <p>
+            Search the members of Jaen Youth Brothers Association Hub.
+        </p>
+
+        <input
+            type="text"
+            id="memberSearchInput"
+            class="member-search"
+            placeholder="🔍 Search by name or Member ID..."
+        >
+
+        <div id="publicMembersList" class="members-list">
+            <p>Loading members...</p>
+        </div>
+
+    </div>
+
 </div>
     <!-- ==========================================
          LOGIN SELECTION
