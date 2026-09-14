@@ -157,44 +157,92 @@ loginForm.addEventListener("submit", async (event) => {
 // JYBA PUBLIC MEMBERS DIRECTORY
 // ==========================================
 
+let publicMembers = [];
+
 async function loadPublicMembers() {
-    const membersList = document.getElementById("publicMembersList");
+
+    const memberCount =
+        document.getElementById("publicMemberCount");
+
+    const membersList =
+        document.getElementById("publicMembersList");
+
+    if (!memberCount || !membersList) {
+        return;
+    }
+
+    membersList.innerHTML =
+        "<p>Loading members...</p>";
+
+    const { data: members, error } =
+        await supabaseClient
+            .from("members")
+            .select("member_id, full_name")
+            .eq("role", "member")
+            .order("full_name", {
+                ascending: true
+            });
+
+    if (error) {
+
+        console.error(
+            "Error loading public members:",
+            error
+        );
+
+        memberCount.textContent = "0";
+
+        membersList.innerHTML =
+            "<p>Unable to load members.</p>";
+
+        return;
+    }
+
+    publicMembers = members || [];
+
+    memberCount.textContent =
+        publicMembers.length;
+
+    displayPublicMembers(publicMembers);
+}
+
+
+// Display members
+function displayPublicMembers(members) {
+
+    const membersList =
+        document.getElementById("publicMembersList");
 
     if (!membersList) {
         return;
     }
 
-    membersList.innerHTML = "<p>Loading members...</p>";
-
-    const { data: members, error } = await supabaseClient
-        .from("members")
-        .select("member_id, full_name")
-        .eq("role", "member")
-        .order("full_name", { ascending: true });
-
-    if (error) {
-        console.error("Error loading public members:", error);
-        membersList.innerHTML =
-            "<p>Unable to load members at this time.</p>";
-        return;
-    }
-
-    if (!members || members.length === 0) {
-        membersList.innerHTML =
-            "<p>No members have been registered yet.</p>";
-        return;
-    }
-
     membersList.innerHTML = "";
 
+    if (members.length === 0) {
+
+        membersList.innerHTML =
+            "<p>No members found.</p>";
+
+        return;
+    }
+
     members.forEach((member) => {
-        const memberCard = document.createElement("div");
-        memberCard.className = "member-card";
+
+        const memberCard =
+            document.createElement("div");
+
+        memberCard.className =
+            "member-card";
 
         memberCard.innerHTML = `
             <div class="member-avatar">👤</div>
+
             <h3>${member.full_name}</h3>
-            <p>Member ID: ${member.member_id}</p>
+
+            <p>
+                Member ID: ${member.member_id}
+            </p>
         `;
 
         membersList.appendChild(memberCard);
@@ -202,7 +250,82 @@ async function loadPublicMembers() {
 }
 
 
-// Load public members when the homepage opens
-document.addEventListener("DOMContentLoaded", () => {
-    loadPublicMembers();
-});
+// Search members
+document
+    .getElementById("memberSearchInput")
+    ?.addEventListener("input", function () {
+
+        const searchText =
+            this.value.toLowerCase().trim();
+
+        const filteredMembers =
+            publicMembers.filter((member) => {
+
+                const name =
+                    (member.full_name || "")
+                    .toLowerCase();
+
+                const memberId =
+                    (member.member_id || "")
+                    .toLowerCase();
+
+                return (
+                    name.includes(searchText) ||
+                    memberId.includes(searchText)
+                );
+            });
+
+        displayPublicMembers(filteredMembers);
+    });
+
+
+// Open members window
+document
+    .getElementById("viewAllMembersBtn")
+    ?.addEventListener("click", function () {
+
+        const modal =
+            document.getElementById(
+                "membersDirectoryModal"
+            );
+
+        if (modal) {
+            modal.style.display = "block";
+        }
+    });
+
+
+// Close members window
+document
+    .getElementById("closeMembersModal")
+    ?.addEventListener("click", function () {
+
+        const modal =
+            document.getElementById(
+                "membersDirectoryModal"
+            );
+
+        if (modal) {
+            modal.style.display = "none";
+        }
+    });
+
+
+// Close when clicking outside the window
+document
+    .getElementById("membersDirectoryModal")
+    ?.addEventListener("click", function (event) {
+
+        if (event.target === this) {
+            this.style.display = "none";
+        }
+    });
+
+
+// Load members when homepage opens
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+        loadPublicMembers();
+    }
+);
