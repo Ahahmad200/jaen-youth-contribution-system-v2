@@ -153,3 +153,56 @@ loginForm.addEventListener("submit", async (event) => {
     }
 
 });
+// ==========================================
+// JYBA PUBLIC MEMBERS DIRECTORY
+// ==========================================
+
+async function loadPublicMembers() {
+    const membersList = document.getElementById("publicMembersList");
+
+    if (!membersList) {
+        return;
+    }
+
+    membersList.innerHTML = "<p>Loading members...</p>";
+
+    const { data: members, error } = await supabaseClient
+        .from("members")
+        .select("member_id, full_name")
+        .eq("role", "member")
+        .order("full_name", { ascending: true });
+
+    if (error) {
+        console.error("Error loading public members:", error);
+        membersList.innerHTML =
+            "<p>Unable to load members at this time.</p>";
+        return;
+    }
+
+    if (!members || members.length === 0) {
+        membersList.innerHTML =
+            "<p>No members have been registered yet.</p>";
+        return;
+    }
+
+    membersList.innerHTML = "";
+
+    members.forEach((member) => {
+        const memberCard = document.createElement("div");
+        memberCard.className = "member-card";
+
+        memberCard.innerHTML = `
+            <div class="member-avatar">👤</div>
+            <h3>${member.full_name}</h3>
+            <p>Member ID: ${member.member_id}</p>
+        `;
+
+        membersList.appendChild(memberCard);
+    });
+}
+
+
+// Load public members when the homepage opens
+document.addEventListener("DOMContentLoaded", () => {
+    loadPublicMembers();
+});
