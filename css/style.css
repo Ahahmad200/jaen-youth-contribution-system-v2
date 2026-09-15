@@ -1048,7 +1048,10 @@ select {
     margin: 0 auto;
     position: relative;
 }
-
+.financial-chart-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
 @media (max-width: 600px) {
 
     .jyba-financial-overview {
