@@ -698,16 +698,75 @@ async function loadPublicNews() {
 
 
         const newsText =
-            document.createElement("p");
+    document.createElement("p");
 
-        newsText.textContent =
-            item.content;
+const readMoreButton =
+    document.createElement("button");
 
+const fullText =
+    item.content || "";
 
-        content.appendChild(title);
-        content.appendChild(date);
-        content.appendChild(newsText);
+const previewLength = 180;
 
+if (fullText.length > previewLength) {
+
+    newsText.textContent =
+        fullText.substring(0, previewLength) + "...";
+
+    readMoreButton.textContent =
+        "Read More →";
+
+    readMoreButton.type = "button";
+
+    readMoreButton.className =
+        "read-more-btn";
+
+    readMoreButton.addEventListener(
+        "click",
+        function () {
+
+            if (
+                readMoreButton.textContent ===
+                "Read More →"
+            ) {
+
+                newsText.textContent =
+                    fullText;
+
+                readMoreButton.textContent =
+                    "Read Less ↑";
+
+            } else {
+
+                newsText.textContent =
+                    fullText.substring(
+                        0,
+                        previewLength
+                    ) + "...";
+
+                readMoreButton.textContent =
+                    "Read More →";
+
+            }
+
+        }
+    );
+
+    content.appendChild(title);
+    content.appendChild(date);
+    content.appendChild(newsText);
+    content.appendChild(readMoreButton);
+
+} else {
+
+    newsText.textContent =
+        fullText;
+
+    content.appendChild(title);
+    content.appendChild(date);
+    content.appendChild(newsText);
+
+}
         newsItem.appendChild(icon);
         newsItem.appendChild(content);
 
