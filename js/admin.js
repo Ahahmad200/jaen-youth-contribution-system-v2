@@ -2563,3 +2563,48 @@ document.addEventListener(
 
     }
 );
+// ==========================================
+// NEWS IMAGE PREVIEW
+// ==========================================
+
+document
+    .getElementById("newsImage")
+    ?.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        const preview =
+            document.getElementById("newsImagePreview");
+
+        if (!file) {
+
+            preview.style.display = "none";
+            preview.src = "";
+
+            return;
+        }
+
+
+        // Check that the selected file is an image
+        if (!file.type.startsWith("image/")) {
+
+            alert("Please select an image file.");
+
+            this.value = "";
+
+            preview.style.display = "none";
+            preview.src = "";
+
+            return;
+        }
+
+
+        // Create temporary preview
+        const imageUrl =
+            URL.createObjectURL(file);
+
+        preview.src = imageUrl;
+
+        preview.style.display = "block";
+
+    });
