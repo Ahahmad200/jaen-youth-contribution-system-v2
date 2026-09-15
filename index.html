@@ -1570,39 +1570,7 @@ window.addEventListener("click", function(event) {
     </div>
 
 </div>
-// ==========================================
-// JYBA BACK TO TOP BUTTON
-// ==========================================
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    const backToTopBtn =
-        document.getElementById("backToTopBtn");
-
-    if (!backToTopBtn) {
-        return;
-    }
-
-    window.addEventListener("scroll", function () {
-
-        if (window.scrollY > 400) {
-            backToTopBtn.style.display = "flex";
-        } else {
-            backToTopBtn.style.display = "none";
-        }
-
-    });
-
-    backToTopBtn.addEventListener("click", function () {
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-
-    });
-
-});
  
 <!-- ==========================================
      JYBA PROFESSIONAL FOOTER
