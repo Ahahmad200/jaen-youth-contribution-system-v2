@@ -512,7 +512,126 @@
 
 <hr>
 <hr>
-        <!-- ==========================================
+      <!-- ==========================================
+     NEWS MANAGEMENT SECTION
+     ========================================== -->
+
+<div id="newsSection" class="admin-section">
+
+    <h2>📰 News Management</h2>
+
+    <p>
+        Create, publish, edit and delete news and announcements
+        for the JYBA public website.
+    </p>
+
+    <!-- ADD / EDIT NEWS FORM -->
+
+    <form id="newsForm">
+
+        <label for="newsTitle">
+            News Title
+        </label>
+
+        <input
+            type="text"
+            id="newsTitle"
+            placeholder="Enter news title"
+            required
+        >
+
+        <br><br>
+
+        <label for="newsDate">
+            News Date
+        </label>
+
+        <input
+            type="date"
+            id="newsDate"
+            required
+        >
+
+        <br><br>
+
+        <label for="newsContent">
+            News Content
+        </label>
+
+        <textarea
+            id="newsContent"
+            rows="6"
+            placeholder="Write your news or announcement here..."
+            required
+        ></textarea>
+
+        <br><br>
+
+        <label>
+            <input
+                type="checkbox"
+                id="newsPublished"
+                checked
+            >
+            Publish this news on the public website
+        </label>
+
+        <br><br>
+
+        <button type="submit" id="saveNewsBtn">
+            📢 Publish News
+        </button>
+
+        <button
+            type="button"
+            id="cancelNewsEditBtn"
+            style="display:none;"
+        >
+            Cancel Edit
+        </button>
+
+        <p id="newsMessage"></p>
+
+    </form>
+
+    <hr>
+
+    <!-- EXISTING NEWS -->
+
+    <h3>Published & Saved News</h3>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="adminNewsList">
+
+                <tr>
+                    <td colspan="4">
+                        Loading news...
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<hr>
+
+<!-- ==========================================
      REPORTS SECTION
      ========================================== -->
 
