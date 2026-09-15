@@ -563,7 +563,14 @@ select {
     color: #1f4e79;
     font-size: 18px;
 }
-
+.leader-card h4 {
+    margin: 4px 0 10px;
+    color: #777;
+    font-size: 14px;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 .leader-card p {
     margin: 5px 0;
     color: #666;
