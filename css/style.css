@@ -706,3 +706,71 @@ select {
     }
 
 }
+/* ==========================================
+   JYBA CONSTITUTION SECTION
+   ========================================== */
+
+.jyba-constitution {
+    margin-top: 20px;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.jyba-constitution h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: #1f4e79;
+    font-size: 26px;
+}
+
+.jyba-constitution p {
+    max-width: 700px;
+    margin: 0 auto 22px;
+    color: #555;
+    line-height: 1.7;
+}
+
+.constitution-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.constitution-btn {
+    display: inline-block;
+    padding: 13px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 15px;
+    border: 1px solid #1f4e79;
+    transition: all 0.2s ease;
+}
+
+.constitution-btn:first-child {
+    background: #1f4e79;
+    color: white;
+}
+
+.constitution-btn:last-child {
+    background: white;
+    color: #1f4e79;
+}
+
+.constitution-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 600px) {
+
+    .constitution-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .constitution-btn {
+        text-align: center;
+    }
+}
