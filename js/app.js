@@ -573,3 +573,157 @@ document.addEventListener(
 
     }
 );
+// ==========================================
+// JYBA PUBLIC NEWS
+// ==========================================
+
+async function loadPublicNews() {
+
+    const newsList =
+        document.getElementById("publicNewsList");
+
+    if (!newsList) return;
+
+
+    const { data: news, error } =
+        await supabaseClient
+            .from("news")
+            .select(
+                "title, content, news_date"
+            )
+            .eq("published", true)
+            .order(
+                "news_date",
+                { ascending: false }
+            );
+
+
+    if (error) {
+
+        console.error(
+            "Error loading public news:",
+            error
+        );
+
+        newsList.innerHTML = `
+            <div class="news-item">
+
+                <div class="news-icon">
+                    ⚠️
+                </div>
+
+                <div class="news-content">
+
+                    <h3>News unavailable</h3>
+
+                    <p>
+                        We are currently unable to load
+                        the latest association news.
+                    </p>
+
+                </div>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    newsList.innerHTML = "";
+
+
+    if (!news || news.length === 0) {
+
+        newsList.innerHTML = `
+            <div class="news-item">
+
+                <div class="news-icon">
+                    📢
+                </div>
+
+                <div class="news-content">
+
+                    <h3>No news yet</h3>
+
+                    <p>
+                        There are currently no published
+                        announcements.
+                    </p>
+
+                </div>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    news.forEach(function (item) {
+
+        const newsItem =
+            document.createElement("div");
+
+        newsItem.className = "news-item";
+
+
+        const icon =
+            document.createElement("div");
+
+        icon.className = "news-icon";
+        icon.textContent = "📢";
+
+
+        const content =
+            document.createElement("div");
+
+        content.className = "news-content";
+
+
+        const title =
+            document.createElement("h3");
+
+        title.textContent =
+            item.title;
+
+
+        const date =
+            document.createElement("p");
+
+        date.className = "news-date";
+
+        date.textContent =
+            "Date: " + item.news_date;
+
+
+        const newsText =
+            document.createElement("p");
+
+        newsText.textContent =
+            item.content;
+
+
+        content.appendChild(title);
+        content.appendChild(date);
+        content.appendChild(newsText);
+
+        newsItem.appendChild(icon);
+        newsItem.appendChild(content);
+
+        newsList.appendChild(newsItem);
+
+    });
+
+}
+
+
+// LOAD PUBLIC NEWS
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        loadPublicNews();
+
+    }
+);
