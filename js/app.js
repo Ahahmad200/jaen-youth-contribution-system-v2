@@ -589,8 +589,8 @@ async function loadPublicNews() {
         await supabaseClient
             .from("news")
             .select(
-                "title, content, news_date"
-            )
+    "title, content, news_date, image_url"
+)
             .eq("published", true)
             .order(
                 "news_date",
