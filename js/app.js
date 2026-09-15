@@ -362,3 +362,156 @@ backToTopBtn?.addEventListener("click", function () {
     });
 
 });
+// ==========================================
+// JYBA FINANCIAL PIE CHART
+// ==========================================
+
+async function loadJYBAFinancialChart() {
+
+    const chartCanvas =
+        document.getElementById("jybaFinancialChart");
+
+    if (!chartCanvas) {
+        return;
+    }
+
+    // Get member contributions
+    const { data: contributions, error: contributionError } =
+        await supabaseClient
+            .from("contributions")
+            .select("amount");
+
+    if (contributionError) {
+        console.error(
+            "Error loading contributions:",
+            contributionError
+        );
+        return;
+    }
+
+    // Get association income and expenses
+    const { data: transactions, error: transactionError } =
+        await supabaseClient
+            .from("financial_transactions")
+            .select("transaction_type, amount");
+
+    if (transactionError) {
+        console.error(
+            "Error loading financial transactions:",
+            transactionError
+        );
+        return;
+    }
+
+    let totalContributions = 0;
+    let totalIncome = 0;
+    let totalExpenses = 0;
+
+    // Calculate contributions
+    (contributions || []).forEach((item) => {
+
+        totalContributions +=
+            Number(item.amount || 0);
+
+    });
+
+    // Calculate income and expenses
+    (transactions || []).forEach((item) => {
+
+        const amount =
+            Number(item.amount || 0);
+
+        if (item.transaction_type === "income") {
+            totalIncome += amount;
+        }
+
+        if (item.transaction_type === "expense") {
+            totalExpenses += amount;
+        }
+
+    });
+
+    // Remove an old chart before creating a new one
+    if (window.jybaFinancialChartInstance) {
+
+        window.jybaFinancialChartInstance.destroy();
+
+    }
+
+    // Create pie chart
+    window.jybaFinancialChartInstance =
+        new Chart(chartCanvas, {
+
+            type: "pie",
+
+            data: {
+
+                labels: [
+                    "Member Contributions",
+                    "Other Income",
+                    "Expenses"
+                ],
+
+                datasets: [{
+
+                    data: [
+                        totalContributions,
+                        totalIncome,
+                        totalExpenses
+                    ]
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        position: "bottom"
+                    },
+
+                    tooltip: {
+
+                        callbacks: {
+
+                            label: function(context) {
+
+                                const value =
+                                    Number(context.raw || 0);
+
+                                return (
+                                    context.label +
+                                    ": ₦" +
+                                    value.toLocaleString()
+                                );
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        });
+
+}
+
+
+// Load financial chart when page opens
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        loadJYBAFinancialChart();
+
+    }
+);
