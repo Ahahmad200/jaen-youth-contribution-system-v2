@@ -368,38 +368,10 @@ backToTopBtn?.addEventListener("click", function () {
 
 async function loadJYBAFinancialChart() {
 
-    const chartCanvas =
-        document.getElementById("jybaFinancialChart");
+    const canvas = document.getElementById("jybaFinancialChart");
 
-    if (!chartCanvas) {
-        return;
-    }
-
-    // Get member contributions
-    const { data: contributions, error: contributionError } =
-        await supabaseClient
-            .from("contributions")
-            .select("amount");
-
-    if (contributionError) {
-        console.error(
-            "Error loading contributions:",
-            contributionError
-        );
-        return;
-    }
-
-    // Get association income and expenses
-    const { data: transactions, error: transactionError } =
-        await supabaseClient
-            .from("financial_transactions")
-            .select("transaction_type, amount");
-
-    if (transactionError) {
-        console.error(
-            "Error loading financial transactions:",
-            transactionError
-        );
+    if (!canvas) {
+        console.log("Financial chart canvas not found.");
         return;
     }
 
@@ -407,41 +379,74 @@ async function loadJYBAFinancialChart() {
     let totalIncome = 0;
     let totalExpenses = 0;
 
-    // Calculate contributions
-    (contributions || []).forEach((item) => {
+    // Get contributions
+    const { data: contributions, error: contributionError } =
+        await supabaseClient
+            .from("contributions")
+            .select("amount");
 
-        totalContributions +=
-            Number(item.amount || 0);
+    if (contributionError) {
+        console.error(
+            "Contribution chart error:",
+            contributionError
+        );
+    } else {
 
-    });
+        (contributions || []).forEach(function(item) {
 
-    // Calculate income and expenses
-    (transactions || []).forEach((item) => {
+            totalContributions += Number(item.amount) || 0;
 
-        const amount =
-            Number(item.amount || 0);
+        });
 
-        if (item.transaction_type === "income") {
-            totalIncome += amount;
-        }
+    }
 
-        if (item.transaction_type === "expense") {
-            totalExpenses += amount;
-        }
+    // Get income and expenses
+    const { data: transactions, error: transactionError } =
+        await supabaseClient
+            .from("financial_transactions")
+            .select("transaction_type, amount");
 
-    });
+    if (transactionError) {
+        console.error(
+            "Financial transaction chart error:",
+            transactionError
+        );
+    } else {
 
-    // Remove an old chart before creating a new one
+        (transactions || []).forEach(function(item) {
+
+            const amount = Number(item.amount) || 0;
+
+            if (item.transaction_type === "income") {
+                totalIncome += amount;
+            }
+
+            if (item.transaction_type === "expense") {
+                totalExpenses += amount;
+            }
+
+        });
+
+    }
+
+    console.log(
+        "JYBA Chart Data:",
+        totalContributions,
+        totalIncome,
+        totalExpenses
+    );
+
+    // Destroy previous chart
     if (window.jybaFinancialChartInstance) {
 
         window.jybaFinancialChartInstance.destroy();
 
     }
 
-    // Create pie chart
-    window.jybaFinancialChartInstance =
-        new Chart(chartCanvas, {
-
+    // Create chart
+    window.jybaFinancialChartInstance = new Chart(
+        canvas,
+        {
             type: "pie",
 
             data: {
@@ -452,16 +457,29 @@ async function loadJYBAFinancialChart() {
                     "Expenses"
                 ],
 
-                datasets: [{
+                datasets: [
+                    {
+                        data: [
+                            totalContributions,
+                            totalIncome,
+                            totalExpenses
+                        ],
 
-                    data: [
-                        totalContributions,
-                        totalIncome,
-                        totalExpenses
-                    ]
+                        backgroundColor: [
+                            "#1f77b4",
+                            "#90ee90",
+                            "#ff8c42"
+                        ],
 
-                }]
+                        borderColor: [
+                            "#ffffff",
+                            "#ffffff",
+                            "#ffffff"
+                        ],
 
+                        borderWidth: 3
+                    }
+                ]
             },
 
             options: {
@@ -473,6 +491,7 @@ async function loadJYBAFinancialChart() {
                 plugins: {
 
                     legend: {
+                        display: true,
                         position: "bottom"
                     },
 
@@ -483,7 +502,7 @@ async function loadJYBAFinancialChart() {
                             label: function(context) {
 
                                 const value =
-                                    Number(context.raw || 0);
+                                    Number(context.raw) || 0;
 
                                 return (
                                     context.label +
@@ -501,15 +520,16 @@ async function loadJYBAFinancialChart() {
 
             }
 
-        });
+        }
+    );
 
 }
 
 
-// Load financial chart when page opens
+// Load chart when page opens
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    function() {
 
         loadJYBAFinancialChart();
 
