@@ -10,105 +10,66 @@
     <link rel="stylesheet" href="css/style.css">
 
     <style>
-  /* ==========================================
-   JYBA HOMEPAGE HEADER - PROFESSIONAL DESIGN
-   ========================================== */
+/* ==========================================  
+       JYBA HOMEPAGE HEADER  
+       ========================================== */  
 
-.jyba-header {
-    text-align: center;
-    padding: 35px 20px 30px;
-    background: linear-gradient(135deg, #f8fbff, #eef5fb);
-    border: 1px solid #d9e5ef;
-    border-radius: 18px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    position: relative;
-    overflow: hidden;
-}
+    .jyba-header {  
+        text-align: center;  
+        padding: 25px 15px 20px;  
+    }  
 
-/* Decorative top line */
-.jyba-header::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(90deg, #1f4e79, #f4b400, #1f4e79);
-}
+    .jyba-logo {  
+        width: 150px;  
+        height: 150px;  
+        object-fit: contain;  
+        border-radius: 50%;  
+        display: block;  
+        margin: 0 auto 15px;  
+    }  
 
-/* Association logo */
-.jyba-logo {
-    width: 155px;
-    height: 155px;
-    object-fit: contain;
-    border-radius: 50%;
-    display: block;
-    margin: 5px auto 18px;
-    background: white;
-    padding: 5px;
-    box-shadow: 0 6px 18px rgba(31, 78, 121, 0.20);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+    .jyba-name {  
+        margin: 0;  
+        font-size: 28px;  
+        line-height: 1.25;  
+        font-weight: 700;  
+    }  
 
-.jyba-logo:hover {
-    transform: scale(1.04);
-    box-shadow: 0 8px 24px rgba(31, 78, 121, 0.28);
-}
+    .jyba-motto {  
+        margin: 10px 0 0;  
+        font-size: 15px;  
+        font-weight: 600;  
+        letter-spacing: 1px;  
+    }  
 
-/* Association name */
-.jyba-name {
-    margin: 0;
-    color: #1f4e79;
-    font-size: 30px;
-    line-height: 1.25;
-    font-weight: 800;
-    letter-spacing: 0.3px;
-}
+    .jyba-description {  
+        margin: 8px 0 0;  
+        font-size: 15px;  
+    }  
 
-/* Association motto */
-.jyba-motto {
-    margin: 12px 0 0;
-    color: #c28a00;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-}
+    /* Mobile phone adjustment */  
+    @media (max-width: 600px) {  
 
-/* Website description */
-.jyba-description {
-    margin: 9px 0 0;
-    color: #555;
-    font-size: 15px;
-    line-height: 1.5;
-}
+        .jyba-logo {  
+            width: 125px;  
+            height: 125px;  
+        }  
 
-/* Mobile phone adjustment */
-@media (max-width: 600px) {
+        .jyba-name {  
+            font-size: 23px;  
+        }  
 
-    .jyba-header {
-        padding: 30px 15px 25px;
-        border-radius: 14px;
-    }
+        .jyba-motto {  
+            font-size: 13px;  
+        }  
 
-    .jyba-logo {
-        width: 125px;
-        height: 125px;
-        margin-bottom: 15px;
-    }
+        .jyba-description {  
+            font-size: 14px;  
+        }  
+    }  
+</style>
 
-    .jyba-name {
-        font-size: 23px;
-    }
-
-    .jyba-motto {
-        font-size: 12px;
-        letter-spacing: 1px;
-    }
-
-    .jyba-description {
-        font-size: 13px;
-    }
-}
+</head>  <body>  <div class="container">  
     <!-- ==========================================
          JYBA ASSOCIATION HEADER
          ========================================== -->
