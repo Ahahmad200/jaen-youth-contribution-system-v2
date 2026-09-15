@@ -516,3 +516,79 @@ select {
     }
 
 }
+/* ==========================================
+   JYBA LEADERSHIP SECTION
+   ========================================== */
+
+.leadership-intro {
+    max-width: 750px;
+    margin: 0 auto 25px;
+    text-align: center;
+    color: #555;
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+.leaders-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.leader-card {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 18px;
+    text-align: center;
+    transition: all 0.25s ease;
+}
+
+.leader-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.leader-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #1f4e79;
+    margin-bottom: 12px;
+}
+
+.leader-card h3 {
+    margin: 5px 0;
+    color: #1f4e79;
+    font-size: 18px;
+}
+
+.leader-card p {
+    margin: 5px 0;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* Tablet */
+@media (max-width: 800px) {
+
+    .leaders-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+/* Phone */
+@media (max-width: 500px) {
+
+    .leaders-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .leader-card img {
+        width: 130px;
+        height: 130px;
+    }
+
+   }
