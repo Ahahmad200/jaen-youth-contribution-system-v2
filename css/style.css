@@ -614,7 +614,7 @@ select {
 }
 
 .leader-card::after {
-    content: "Click photo to view biography";
+    content: "Click photo to view full image";
     display: block;
     margin-top: 8px;
     font-size: 12px;
