@@ -1044,14 +1044,19 @@ select {
 .financial-chart-container {
     width: 100%;
     max-width: 500px;
-    height: 400px;
+    height: 380px;
     margin: 0 auto;
     position: relative;
 }
+
 .financial-chart-container canvas {
+    display: block !important;
     width: 100% !important;
-    height: 100% !important;
+    height: 320px !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
 }
+
 @media (max-width: 600px) {
 
     .jyba-financial-overview {
@@ -1063,7 +1068,10 @@ select {
     }
 
     .financial-chart-container {
-        height: 300px;
+        height: 340px;
     }
 
+    .financial-chart-container canvas {
+        height: 280px !important;
+    }
 }
