@@ -363,175 +363,60 @@ backToTopBtn?.addEventListener("click", function () {
 
 });
 // ==========================================
-// JYBA FINANCIAL PIE CHART
+// JYBA FINANCIAL PIE CHART TEST
 // ==========================================
 
-async function loadJYBAFinancialChart() {
+document.addEventListener("DOMContentLoaded", function () {
 
     const canvas = document.getElementById("jybaFinancialChart");
 
     if (!canvas) {
-        console.log("Financial chart canvas not found.");
+        alert("Chart canvas was not found.");
         return;
     }
 
-    let totalContributions = 0;
-    let totalIncome = 0;
-    let totalExpenses = 0;
+    new Chart(canvas, {
 
-    // Get contributions
-    const { data: contributions, error: contributionError } =
-        await supabaseClient
-            .from("contributions")
-            .select("amount");
+        type: "pie",
 
-    if (contributionError) {
-        console.error(
-            "Contribution chart error:",
-            contributionError
-        );
-    } else {
+        data: {
+            labels: [
+                "Member Contributions",
+                "Other Income",
+                "Expenses"
+            ],
 
-        (contributions || []).forEach(function(item) {
-
-            totalContributions += Number(item.amount) || 0;
-
-        });
-
-    }
-
-    // Get income and expenses
-    const { data: transactions, error: transactionError } =
-        await supabaseClient
-            .from("financial_transactions")
-            .select("transaction_type, amount");
-
-    if (transactionError) {
-        console.error(
-            "Financial transaction chart error:",
-            transactionError
-        );
-    } else {
-
-        (transactions || []).forEach(function(item) {
-
-            const amount = Number(item.amount) || 0;
-
-            if (item.transaction_type === "income") {
-                totalIncome += amount;
-            }
-
-            if (item.transaction_type === "expense") {
-                totalExpenses += amount;
-            }
-
-        });
-
-    }
-
-    console.log(
-        "JYBA Chart Data:",
-        totalContributions,
-        totalIncome,
-        totalExpenses
-    );
-
-    // Destroy previous chart
-    if (window.jybaFinancialChartInstance) {
-
-        window.jybaFinancialChartInstance.destroy();
-
-    }
-
-    // Create chart
-    window.jybaFinancialChartInstance = new Chart(
-        canvas,
-        {
-            type: "pie",
-
-            data: {
-
-                labels: [
-                    "Member Contributions",
-                    "Other Income",
-                    "Expenses"
+            datasets: [{
+                data: [
+                    55000,
+                    10000,
+                    3000
                 ],
 
-                datasets: [
-                    {
-                        data: [
-                            totalContributions,
-                            totalIncome,
-                            totalExpenses
-                        ],
+                backgroundColor: [
+                    "#1f77b4",
+                    "#90ee90",
+                    "#ff8c42"
+                ],
 
-                        backgroundColor: [
-                            "#1f77b4",
-                            "#90ee90",
-                            "#ff8c42"
-                        ],
+                borderColor: "#ffffff",
 
-                        borderColor: [
-                            "#ffffff",
-                            "#ffffff",
-                            "#ffffff"
-                        ],
+                borderWidth: 3
+            }]
+        },
 
-                        borderWidth: 3
-                    }
-                ]
-            },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
 
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                plugins: {
-
-                    legend: {
-                        display: true,
-                        position: "bottom"
-                    },
-
-                    tooltip: {
-
-                        callbacks: {
-
-                            label: function(context) {
-
-                                const value =
-                                    Number(context.raw) || 0;
-
-                                return (
-                                    context.label +
-                                    ": ₦" +
-                                    value.toLocaleString()
-                                );
-
-                            }
-
-                        }
-
-                    }
-
+            plugins: {
+                legend: {
+                    display: true,
+                    position: "bottom"
                 }
-
             }
-
         }
-    );
 
-}
+    });
 
-
-// Load chart when page opens
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        loadJYBAFinancialChart();
-
-    }
-);
+});
