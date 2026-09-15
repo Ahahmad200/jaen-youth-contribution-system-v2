@@ -1075,3 +1075,30 @@ select {
         height: 280px !important;
     }
 }
+/* ==========================================
+   JYBA NEWS IMAGES
+   ========================================== */
+
+.news-image-container {
+    width: 100%;
+    margin-bottom: 12px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.news-image {
+    display: block;
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+
+@media (max-width: 600px) {
+
+    .news-image {
+        height: 200px;
+    }
+
+}
