@@ -2398,56 +2398,149 @@ document
 
         }
 
-        // CREATE NEW NEWS
-        else {
+       // CREATE NEW NEWS
+else {
 
-            const { data: adminProfile, error: adminError } =
-                await supabaseClient
-                    .from("members")
-                    .select("id")
-                    .eq("auth_user_id", (await supabaseClient.auth.getUser()).data.user.id)
-                    .single();
-
-
-            if (adminError || !adminProfile) {
-
-                console.error("Admin profile error:", adminError);
-
-                message.textContent =
-                    "Unable to identify administrator.";
-
-                return;
-            }
+    const { data: adminProfile, error: adminError } =
+        await supabaseClient
+            .from("members")
+            .select("id")
+            .eq(
+                "auth_user_id",
+                (await supabaseClient.auth.getUser()).data.user.id
+            )
+            .single();
 
 
-            const { error } = await supabaseClient
-                .from("news")
-                .insert({
+    if (adminError || !adminProfile) {
 
-                    title: title,
-                    content: content,
-                    news_date: newsDate,
-                    published: published,
-                    created_by: adminProfile.id
+        console.error(
+            "Admin profile error:",
+            adminError
+        );
 
-                });
+        message.textContent =
+            "Unable to identify administrator.";
+
+        return;
+    }
 
 
-            if (error) {
+    // ==========================================
+    // UPLOAD NEWS IMAGE
+    // ==========================================
 
-                console.error("Error creating news:", error);
+    let imageUrl = null;
 
-                message.textContent =
-                    "Unable to publish news.";
+    const imageInput =
+        document.getElementById("newsImage");
 
-                return;
-            }
+    const imageFile =
+        imageInput?.files[0];
+
+
+    if (imageFile) {
+
+        // Create a unique file name
+        const fileExtension =
+            imageFile.name.split(".").pop();
+
+        const fileName =
+            "news-" +
+            Date.now() +
+            "-" +
+            Math.random()
+                .toString(36)
+                .substring(2, 8) +
+            "." +
+            fileExtension;
+
+
+        const filePath =
+            fileName;
+
+
+        const { error: uploadError } =
+            await supabaseClient
+                .storage
+                .from("news-images")
+                .upload(
+                    filePath,
+                    imageFile
+                );
+
+
+        if (uploadError) {
+
+            console.error(
+                "News image upload error:",
+                uploadError
+            );
 
             message.textContent =
-                "News published successfully.";
+                "News image could not be uploaded.";
 
+            return;
         }
 
+
+        // Get public image URL
+
+        const { data: publicUrlData } =
+            supabaseClient
+                .storage
+                .from("news-images")
+                .getPublicUrl(filePath);
+
+
+        imageUrl =
+            publicUrlData.publicUrl;
+
+    }
+
+
+    // ==========================================
+    // SAVE NEWS
+    // ==========================================
+
+    const { error } =
+        await supabaseClient
+            .from("news")
+            .insert({
+
+                title: title,
+
+                content: content,
+
+                news_date: newsDate,
+
+                published: published,
+
+                created_by: adminProfile.id,
+
+                image_url: imageUrl
+
+            });
+
+
+    if (error) {
+
+        console.error(
+            "Error creating news:",
+            error
+        );
+
+        message.textContent =
+            "Unable to publish news.";
+
+        return;
+    }
+
+
+    message.textContent =
+        "News published successfully.";
+
+}
 
         // RESET FORM
 
