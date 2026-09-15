@@ -329,3 +329,36 @@ document.addEventListener(
         loadPublicMembers();
     }
 );
+// ==========================================
+// JYBA BACK TO TOP BUTTON
+// ==========================================
+
+const backToTopBtn =
+    document.getElementById("backToTopBtn");
+
+window.addEventListener("scroll", function () {
+
+    if (!backToTopBtn) {
+        return;
+    }
+
+    if (window.scrollY > 400) {
+
+        backToTopBtn.style.display = "flex";
+
+    } else {
+
+        backToTopBtn.style.display = "none";
+
+    }
+
+});
+
+backToTopBtn?.addEventListener("click", function () {
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+});
