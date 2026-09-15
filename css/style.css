@@ -621,3 +621,88 @@ select {
     color: #777;
     font-style: italic;
 }
+/* ==========================================
+   JYBA ACTIVITIES & NEWS
+   ========================================== */
+
+.jyba-news {
+    margin-top: 20px;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.jyba-news h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #1f4e79;
+    font-size: 26px;
+}
+
+.jyba-news .news-intro {
+    max-width: 750px;
+    margin: 0 auto 25px;
+    color: #555;
+    line-height: 1.7;
+}
+
+.news-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    text-align: left;
+}
+
+.news-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+}
+
+.news-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.news-icon {
+    font-size: 32px;
+}
+
+.news-content h3 {
+    margin: 0 0 6px;
+    color: #1f4e79;
+    font-size: 17px;
+}
+
+.news-date {
+    font-size: 13px;
+    color: #777;
+}
+
+.news-content p:last-child {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* Tablet */
+@media (max-width: 800px) {
+
+    .news-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+/* Phone */
+@media (max-width: 500px) {
+
+    .news-list {
+        grid-template-columns: 1fr;
+    }
+
+}
