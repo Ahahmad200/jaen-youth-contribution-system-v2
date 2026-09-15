@@ -1017,3 +1017,50 @@ select {
         font-size: 22px;
     }
 }
+/* ==========================================
+   JYBA FINANCIAL OVERVIEW
+   ========================================== */
+
+.jyba-financial-overview {
+    margin-top: 20px;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.jyba-financial-overview h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #1f4e79;
+    font-size: 26px;
+}
+
+.financial-intro {
+    max-width: 700px;
+    margin: 0 auto 25px;
+    color: #555;
+    line-height: 1.7;
+}
+
+.financial-chart-container {
+    width: 100%;
+    max-width: 500px;
+    height: 350px;
+    margin: 0 auto;
+    position: relative;
+}
+
+@media (max-width: 600px) {
+
+    .jyba-financial-overview {
+        padding: 25px 15px;
+    }
+
+    .jyba-financial-overview h2 {
+        font-size: 23px;
+    }
+
+    .financial-chart-container {
+        height: 300px;
+    }
+
+}
