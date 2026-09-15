@@ -599,3 +599,25 @@ select {
     }
 
    }
+/* ==========================================
+   JYBA LEADER PHOTO INTERACTION
+   ========================================== */
+
+.leader-card img {
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.leader-card img:hover {
+    transform: scale(1.04);
+    box-shadow: 0 6px 18px rgba(31, 78, 121, 0.25);
+}
+
+.leader-card::after {
+    content: "Click photo to view biography";
+    display: block;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #777;
+    font-style: italic;
+}
