@@ -570,6 +570,36 @@
             placeholder="Write your news or announcement here..."
             required
         ></textarea>
+        <br><br>
+
+<label for="newsImage">
+    News Image
+</label>
+
+<input
+    type="file"
+    id="newsImage"
+    accept="image/*"
+>
+
+<p>
+    Select an image for this news post.
+    Image is optional.
+</p>
+
+<img
+    id="newsImagePreview"
+    src=""
+    alt="News image preview"
+    style="
+        display:none;
+        max-width:300px;
+        max-height:200px;
+        margin-top:10px;
+        border-radius:10px;
+        object-fit:cover;
+    "
+>
 
         <br><br>
 
