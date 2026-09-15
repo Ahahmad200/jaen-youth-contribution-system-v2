@@ -2229,3 +2229,337 @@ loadMemberContributionReport();
 loadMonthlyContributionReport();
 loadFinancialCategoryReport();
     });
+// ==========================================
+// JYBA NEWS MANAGEMENT
+// ==========================================
+
+let editingNewsId = null;
+
+
+// LOAD NEWS FOR ADMIN
+async function loadAdminNews() {
+
+    const newsList = document.getElementById("adminNewsList");
+
+    if (!newsList) return;
+
+    newsList.innerHTML = `
+        <tr>
+            <td colspan="4">Loading news...</td>
+        </tr>
+    `;
+
+    const { data: news, error } = await supabaseClient
+        .from("news")
+        .select("id, title, content, news_date, published")
+        .order("news_date", { ascending: false });
+
+    if (error) {
+
+        console.error("Error loading news:", error);
+
+        newsList.innerHTML = `
+            <tr>
+                <td colspan="4">
+                    Unable to load news.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    newsList.innerHTML = "";
+
+    if (!news || news.length === 0) {
+
+        newsList.innerHTML = `
+            <tr>
+                <td colspan="4">
+                    No news has been posted yet.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    news.forEach(function (item) {
+
+        const row = document.createElement("tr");
+
+        const titleCell = document.createElement("td");
+        titleCell.textContent = item.title;
+
+        const dateCell = document.createElement("td");
+        dateCell.textContent = item.news_date;
+
+        const statusCell = document.createElement("td");
+
+        if (item.published) {
+            statusCell.textContent = "Published";
+        } else {
+            statusCell.textContent = "Draft";
+        }
+
+        const actionsCell = document.createElement("td");
+
+        const editButton = document.createElement("button");
+
+        editButton.type = "button";
+        editButton.textContent = "✏️ Edit";
+
+        editButton.addEventListener("click", function () {
+            editNews(item);
+        });
+
+
+        const deleteButton = document.createElement("button");
+
+        deleteButton.type = "button";
+        deleteButton.textContent = "🗑️ Delete";
+
+        deleteButton.addEventListener("click", function () {
+            deleteNews(item.id);
+        });
+
+
+        actionsCell.appendChild(editButton);
+        actionsCell.appendChild(deleteButton);
+
+        row.appendChild(titleCell);
+        row.appendChild(dateCell);
+        row.appendChild(statusCell);
+        row.appendChild(actionsCell);
+
+        newsList.appendChild(row);
+
+    });
+}
+
+
+// ADD / UPDATE NEWS
+document
+    .getElementById("newsForm")
+    ?.addEventListener("submit", async function (event) {
+
+        event.preventDefault();
+
+        const title =
+            document.getElementById("newsTitle").value.trim();
+
+        const newsDate =
+            document.getElementById("newsDate").value;
+
+        const content =
+            document.getElementById("newsContent").value.trim();
+
+        const published =
+            document.getElementById("newsPublished").checked;
+
+        const message =
+            document.getElementById("newsMessage");
+
+        if (!title || !newsDate || !content) {
+
+            message.textContent =
+                "Please complete all required fields.";
+
+            return;
+        }
+
+
+        // EDIT EXISTING NEWS
+        if (editingNewsId) {
+
+            const { error } = await supabaseClient
+                .from("news")
+                .update({
+                    title: title,
+                    content: content,
+                    news_date: newsDate,
+                    published: published
+                })
+                .eq("id", editingNewsId);
+
+
+            if (error) {
+
+                console.error("Error updating news:", error);
+
+                message.textContent =
+                    "Unable to update news.";
+
+                return;
+            }
+
+            message.textContent =
+                "News updated successfully.";
+
+        }
+
+        // CREATE NEW NEWS
+        else {
+
+            const { data: adminProfile, error: adminError } =
+                await supabaseClient
+                    .from("members")
+                    .select("id")
+                    .eq("auth_user_id", (await supabaseClient.auth.getUser()).data.user.id)
+                    .single();
+
+
+            if (adminError || !adminProfile) {
+
+                console.error("Admin profile error:", adminError);
+
+                message.textContent =
+                    "Unable to identify administrator.";
+
+                return;
+            }
+
+
+            const { error } = await supabaseClient
+                .from("news")
+                .insert({
+
+                    title: title,
+                    content: content,
+                    news_date: newsDate,
+                    published: published,
+                    created_by: adminProfile.id
+
+                });
+
+
+            if (error) {
+
+                console.error("Error creating news:", error);
+
+                message.textContent =
+                    "Unable to publish news.";
+
+                return;
+            }
+
+            message.textContent =
+                "News published successfully.";
+
+        }
+
+
+        // RESET FORM
+
+        editingNewsId = null;
+
+        document.getElementById("newsForm").reset();
+
+        document.getElementById("newsPublished").checked = true;
+
+        document.getElementById("saveNewsBtn").textContent =
+            "📢 Publish News";
+
+        document.getElementById("cancelNewsEditBtn").style.display =
+            "none";
+
+
+        // RELOAD NEWS
+
+        loadAdminNews();
+
+    });
+
+
+// EDIT NEWS
+function editNews(news) {
+
+    editingNewsId = news.id;
+
+    document.getElementById("newsTitle").value =
+        news.title;
+
+    document.getElementById("newsDate").value =
+        news.news_date;
+
+    document.getElementById("newsContent").value =
+        news.content;
+
+    document.getElementById("newsPublished").checked =
+        news.published;
+
+    document.getElementById("saveNewsBtn").textContent =
+        "💾 Save Changes";
+
+    document.getElementById("cancelNewsEditBtn").style.display =
+        "inline-block";
+
+    document.getElementById("newsMessage").textContent =
+        "Editing news...";
+
+}
+
+
+// CANCEL EDIT
+document
+    .getElementById("cancelNewsEditBtn")
+    ?.addEventListener("click", function () {
+
+        editingNewsId = null;
+
+        document.getElementById("newsForm").reset();
+
+        document.getElementById("newsPublished").checked = true;
+
+        document.getElementById("saveNewsBtn").textContent =
+            "📢 Publish News";
+
+        document.getElementById("cancelNewsEditBtn").style.display =
+            "none";
+
+        document.getElementById("newsMessage").textContent = "";
+
+    });
+
+
+// DELETE NEWS
+async function deleteNews(newsId) {
+
+    const confirmed =
+        confirm("Are you sure you want to delete this news?");
+
+    if (!confirmed) return;
+
+
+    const { error } = await supabaseClient
+        .from("news")
+        .delete()
+        .eq("id", newsId);
+
+
+    if (error) {
+
+        console.error("Error deleting news:", error);
+
+        alert("Unable to delete news.");
+
+        return;
+    }
+
+
+    alert("News deleted successfully.");
+
+    loadAdminNews();
+
+}
+
+
+// LOAD NEWS WHEN ADMIN PAGE OPENS
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        loadAdminNews();
+
+    }
+);
