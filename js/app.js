@@ -363,60 +363,213 @@ backToTopBtn?.addEventListener("click", function () {
 
 });
 // ==========================================
-// JYBA FINANCIAL PIE CHART TEST
+// JYBA FINANCIAL PIE CHART
 // ==========================================
 
-document.addEventListener("DOMContentLoaded", function () {
+async function loadJYBAFinancialChart() {
 
     const canvas = document.getElementById("jybaFinancialChart");
 
     if (!canvas) {
-        alert("Chart canvas was not found.");
         return;
     }
 
-    new Chart(canvas, {
+    let totalContributions = 0;
+    let totalIncome = 0;
+    let totalExpenses = 0;
 
-        type: "pie",
+    // ==========================================
+    // GET MEMBER CONTRIBUTIONS
+    // ==========================================
 
-        data: {
-            labels: [
-                "Member Contributions",
-                "Other Income",
-                "Expenses"
-            ],
+    const { data: contributions, error: contributionError } =
+        await supabaseClient
+            .from("contributions")
+            .select("amount");
 
-            datasets: [{
-                data: [
-                    55000,
-                    10000,
-                    3000
-                ],
+    if (contributionError) {
 
-                backgroundColor: [
-                    "#1f77b4",
-                    "#90ee90",
-                    "#ff8c42"
-                ],
+        console.error(
+            "Error loading contributions:",
+            contributionError
+        );
 
-                borderColor: "#ffffff",
+    } else {
 
-                borderWidth: 3
-            }]
-        },
+        (contributions || []).forEach(function(item) {
 
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
+            totalContributions += Number(item.amount) || 0;
 
-            plugins: {
-                legend: {
-                    display: true,
-                    position: "bottom"
-                }
+        });
+
+    }
+
+
+    // ==========================================
+    // GET ASSOCIATION INCOME & EXPENSES
+    // ==========================================
+
+    const { data: transactions, error: transactionError } =
+        await supabaseClient
+            .from("financial_transactions")
+            .select("transaction_type, amount");
+
+    if (transactionError) {
+
+        console.error(
+            "Error loading financial transactions:",
+            transactionError
+        );
+
+    } else {
+
+        (transactions || []).forEach(function(item) {
+
+            const amount = Number(item.amount) || 0;
+
+            if (item.transaction_type === "income") {
+
+                totalIncome += amount;
+
             }
+
+            if (item.transaction_type === "expense") {
+
+                totalExpenses += amount;
+
+            }
+
+        });
+
+    }
+
+
+    // ==========================================
+    // SHOW VALUES IN CONSOLE
+    // ==========================================
+
+    console.log(
+        "JYBA Financial Chart:",
+        {
+            contributions: totalContributions,
+            income: totalIncome,
+            expenses: totalExpenses
+        }
+    );
+
+
+    // ==========================================
+    // REMOVE OLD CHART
+    // ==========================================
+
+    if (window.jybaFinancialChartInstance) {
+
+        window.jybaFinancialChartInstance.destroy();
+
+    }
+
+
+    // ==========================================
+    // CREATE REAL FINANCIAL PIE CHART
+    // ==========================================
+
+    window.jybaFinancialChartInstance = new Chart(
+        canvas,
+        {
+
+            type: "pie",
+
+            data: {
+
+                labels: [
+                    "Member Contributions",
+                    "Other Income",
+                    "Expenses"
+                ],
+
+                datasets: [
+
+                    {
+
+                        data: [
+                            totalContributions,
+                            totalIncome,
+                            totalExpenses
+                        ],
+
+                        backgroundColor: [
+                            "#1f77b4",
+                            "#90ee90",
+                            "#ff8c42"
+                        ],
+
+                        borderColor: "#ffffff",
+
+                        borderWidth: 3
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+
+                        display: true,
+
+                        position: "bottom"
+
+                    },
+
+                    tooltip: {
+
+                        callbacks: {
+
+                            label: function(context) {
+
+                                const value =
+                                    Number(context.raw) || 0;
+
+                                return (
+                                    context.label +
+                                    ": ₦" +
+                                    value.toLocaleString()
+                                );
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
         }
 
-    });
+    );
 
-});
+}
+
+
+// ==========================================
+// LOAD FINANCIAL CHART
+// ==========================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadJYBAFinancialChart();
+
+    }
+);
