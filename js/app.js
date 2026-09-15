@@ -666,7 +666,39 @@ async function loadPublicNews() {
             document.createElement("div");
 
         newsItem.className = "news-item";
+const newsImageContainer =
+    document.createElement("div");
 
+newsImageContainer.className =
+    "news-image-container";
+
+
+if (item.image_url) {
+
+    const newsImage =
+        document.createElement("img");
+
+    newsImage.src =
+        item.image_url;
+
+    newsImage.alt =
+        item.title;
+
+    newsImage.className =
+        "news-image";
+
+    newsImage.loading =
+        "lazy";
+
+    newsImageContainer.appendChild(
+        newsImage
+    );
+
+    newsItem.appendChild(
+        newsImageContainer
+    );
+
+}
 
         const icon =
             document.createElement("div");
