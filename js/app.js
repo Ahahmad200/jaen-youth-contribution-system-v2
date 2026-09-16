@@ -690,13 +690,31 @@ if (item.image_url) {
     newsImage.loading =
         "lazy";
 
-    newsImageContainer.appendChild(
-        newsImage
-    );
+    newsImage.style.cursor = "pointer";
 
-    newsItem.appendChild(
-        newsImageContainer
-    );
+newsImage.title =
+    "Click to view full image";
+
+newsImage.addEventListener(
+    "click",
+    function () {
+
+        window.open(
+            item.image_url,
+            "_blank"
+        );
+
+    }
+);
+
+
+newsImageContainer.appendChild(
+    newsImage
+);
+
+newsItem.appendChild(
+    newsImageContainer
+);
 
 }
 
